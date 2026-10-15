@@ -60,8 +60,8 @@ body.g #gside{display:flex}body.g #lside,body.g #rside{display:none}
 <div id="bmenu"></div>
 <div id="done"><div class="box"><h2 id="dh" style="color:var(--gold);margin:0 0 6px"></h2><p id="dp" style="margin:0 0 12px"></p><button id="dnext" class="bbtn" style="text-align:center"></button><button id="dre" class="bbtn" style="text-align:center"></button><button id="dbtn"></button></div></div>
 <script>
-const T={en:{title:"Egypt Quest",score:"Points",hintMap:"Tap a marker · pinch to zoom · catch golden scarabs (+15) · avoid the black ☠",enter:"Enter this world",back:"← Map",egypt:"EGYPT",locked:"Needs # total points (you have %)",hint:"Hint",gl:"Find the hidden artifacts · tap to collect · drag to pan · pinch to zoom",doneH:"World complete!",doneP:"Challenge complete! +50 points.",unl:" New site unlocked!",next:"Continue"},
-ar:{title:"مغامرة مصر",score:"النقاط",hintMap:"اضغط على علامة · قرّب بالأصابع · اصطد الجعارين الذهبية (+15) · تجنب الأسود ☠",enter:"ادخل هذا العالم",back:"الخريطة",egypt:"مصر",locked:"يحتاج # نقطة إجمالية (لديك %)",hint:"تلميح",gl:"ابحث عن القطع الأثرية المخفية · اضغط للجمع · اسحب للتحريك · قرّب بالأصابع",doneH:"اكتملت المرحلة!",doneP:"أتممت التحدي! +50 نقطة.",unl:" تم فتح موقع جديد!",next:"متابعة"}};
+const T={en:{title:"Egypt Quest",score:"Points",hintMap:"Tap a marker · pinch to zoom · catch golden scarabs (+4) · avoid the black ☠",enter:"Enter this world",back:"← Map",egypt:"EGYPT",locked:"Needs # total points (you have %)",hint:"Hint",gl:"Find the hidden artifacts · tap to collect · drag to pan · pinch to zoom",doneH:"World complete!",doneP:"Challenge complete! +50 points.",unl:" New site unlocked!",next:"Continue"},
+ar:{title:"مغامرة مصر",score:"النقاط",hintMap:"اضغط على علامة · قرّب بالأصابع · اصطد الجعارين الذهبية (+4) · تجنب الأسود ☠",enter:"ادخل هذا العالم",back:"الخريطة",egypt:"مصر",locked:"يحتاج # نقطة إجمالية (لديك %)",hint:"تلميح",gl:"ابحث عن القطع الأثرية المخفية · اضغط للجمع · اسحب للتحريك · قرّب بالأصابع",doneH:"اكتملت المرحلة!",doneP:"أتممت التحدي! +50 نقطة.",unl:" تم فتح موقع جديد!",next:"متابعة"}};
 const SITES=[
 {id:"giza",lon:31.13,lat:29.98,en:"Giza Pyramids",ar:"أهرامات الجيزة",eraEn:"Old Kingdom · c. 2600 BC",eraAr:"الدولة القديمة · نحو 2600 ق.م",dEn:"Home of the Great Pyramid of Khufu, the Sphinx and the pyramids of Khafre and Menkaure.",dAr:"موطن هرم خوفو الأكبر وأبو الهول وهرمي خفرع ومنكاورع."},
 {id:"alex",lon:29.89,lat:31.21,en:"Qaitbay Citadel, Alexandria",ar:"قلعة قايتباي، الإسكندرية",eraEn:"Mamluk era · 1477 AD",eraAr:"العصر المملوكي · 1477م",dEn:"A 15th-century fort built on the site of the ancient Pharos lighthouse.",dAr:"حصن من القرن الخامس عشر بُني على موقع فنار الإسكندرية القديم."},
@@ -71,15 +71,16 @@ const SITES=[
 {id:"siwa",lon:25.52,lat:29.2,en:"Siwa Oasis – Temple of the Oracle",ar:"واحة سيوة – معبد الوحي",eraEn:"Saite period · 6th century BC",eraAr:"العصر الصاوي · القرن السادس ق.م",dEn:"A remote desert oasis home to the Oracle of Amun, which Alexander the Great is said to have visited in 331 BC.",dAr:"واحة صحراوية نائية تضم معبد وحي آمون الذي يُروى أن الإسكندر الأكبر زاره عام 331 ق.م."},
 {id:"edfu",lon:32.873,lat:24.978,en:"Temple of Horus, Edfu",ar:"معبد حورس، إدفو",eraEn:"Ptolemaic era · 237–57 BC",eraAr:"العصر البطلمي · 237–57 ق.م",dEn:"One of the best-preserved ancient temples in Egypt, dedicated to the falcon god Horus.",dAr:"من أفضل المعابد القديمة حفظًا في مصر، وهو مكرس للإله حورس برأس الصقر."},
 {id:"sinai",lon:33.976,lat:28.556,en:"Saint Catherine's Monastery, Sinai",ar:"دير سانت كاترين، سيناء",eraEn:"Byzantine era · 6th century AD",eraAr:"العصر البيزنطي · القرن السادس الميلادي",dEn:"A fortified monastery at the foot of Mount Sinai, among the oldest continuously inhabited Christian monasteries in the world.",dAr:"دير محصّن عند سفح جبل سيناء، ويُعد من أقدم الأديرة المسيحية المأهولة باستمرار في العالم."},
-{id:"redsea",lon:33.85,lat:27.25,en:"Red Sea Reefs, Hurghada",ar:"شعاب البحر الأحمر، الغردقة",eraEn:"Natural wonder",eraAr:"أعجوبة طبيعية",dEn:"A world-famous diving coast with colorful coral reefs and hundreds of fish species.",dAr:"ساحل شهير للغوص بشعابه المرجانية الملونة ومئات أنواع الأسماك."}
+{id:"redsea",lon:34.3,lat:26.8,en:"Red Sea Reefs, Hurghada",ar:"شعاب البحر الأحمر، الغردقة",eraEn:"Natural wonder",eraAr:"أعجوبة طبيعية",dEn:"A world-famous diving coast with colorful coral reefs and hundreds of fish species.",dAr:"ساحل شهير للغوص بشعابه المرجانية الملونة ومئات أنواع الأسماك."}
 ,{id:"abydos",lon:31.919,lat:26.185,en:"Abydos – Temple of Seti I",ar:"أبيدوس – معبد سيتي الأول",eraEn:"New Kingdom · c. 1290 BC",eraAr:"الدولة الحديثة · نحو 1290 ق.م",dEn:"Famous for the Abydos King List, a wall relief naming earlier pharaohs, and its beautifully colored carvings.",dAr:"اشتهر بقائمة ملوك أبيدوس، وهي نقش جداري يذكر أسماء الفراعنة السابقين، ونقوشه الملونة الجميلة."},
 {id:"whitedesert",lon:27.97,lat:27.35,en:"White Desert, Farafra",ar:"الصحراء البيضاء، الفرافرة",eraEn:"Natural wonder",eraAr:"أعجوبة طبيعية",dEn:"A surreal desert landscape of chalk rocks shaped by wind into mushrooms and other strange forms.",dAr:"مشهد صحراوي ساحر من صخور طباشيرية نحتتها الرياح على شكل فطر وأشكال غريبة."},
 {id:"hitan",lon:28.22,lat:29.27,en:"Wadi Al-Hitan, Valley of the Whales",ar:"وادي الحيتان",eraEn:"Fossils · about 40 million years old",eraAr:"حفريات · عمرها نحو 40 مليون سنة",dEn:"A World Heritage site in the desert where skeletons of early whales lie in the sand.",dAr:"موقع تراث عالمي في الصحراء تستلقي فيه هياكل حيتان قديمة على الرمال."},
 {id:"matruh",lon:27.23,lat:31.35,en:"Marsa Matruh – Cleopatra Beach",ar:"مرسى مطروح – شاطئ كليوباترا",eraEn:"Mediterranean coast",eraAr:"ساحل البحر المتوسط",dEn:"A coastal city with turquoise bays and white sand beaches on the Mediterranean.",dAr:"مدينة ساحلية بخلجانها الفيروزية وشواطئها ذات الرمال البيضاء على البحر المتوسط."},
-{id:"kharga",lon:30.54,lat:25.46,en:"Kharga Oasis – Temple of Hibis",ar:"واحة الخارجة – معبد هيبس",eraEn:"Persian period · c. 500 BC",eraAr:"العصر الفارسي · نحو 500 ق.م",dEn:"A remote desert oasis with one of the best-preserved temples from the Persian period.",dAr:"واحة صحراوية نائية تضم أحد أفضل المعابد المحفوظة من العصر الفارسي."}];
+{id:"kharga",lon:30.54,lat:25.46,en:"Kharga Oasis – Temple of Hibis",ar:"واحة الخارجة – معبد هيبس",eraEn:"Persian period · c. 500 BC",eraAr:"العصر الفارسي · نحو 500 ق.م",dEn:"A remote desert oasis with one of the best-preserved temples from the Persian period.",dAr:"واحة صحراوية نائية تضم أحد أفضل المعابد المحفوظة من العصر الفارسي."},
+{id:"gouna",req:800,lon:33.68,lat:27.39,en:"El Gouna Film Festival",ar:"مهرجان الجونة السينمائي",eraEn:"Founded 2017 · Red Sea",eraAr:"تأسس عام 2017 · البحر الأحمر",dEn:"A film festival in the Red Sea resort town of El Gouna. Test your knowledge of Egyptian movies!",dAr:"مهرجان سينمائي في مدينة الجونة على البحر الأحمر. اختبر معلوماتك عن الأفلام المصرية!"}];
 const OUT=[[25.15,31.65],[29.9,31.2],[32.3,31.25],[34.25,31.3],[34.9,29.5],[34.5,28.5],[34.25,27.75],[33.6,28.4],[32.65,29.9],[32.6,29.5],[33.4,28.1],[33.8,27.25],[34.9,25.5],[36.9,22],[25,22]];
 const NILE=[[32.5,22.1],[32.9,24.1],[32.65,25.7],[31.2,27.2],[30.8,28.5],[31.24,30.04],[31.3,31.0],[31.8,31.4]];
-let lang="en",score=0,sel=null,mode="map",cur=null;const seen=new Set(),done=new Set();const need=i=>50*i*(i+2);const unlocked=i=>i===0||score>=need(i)||done.has(SITES[i].id);
+let lang="en",score=0,sel=null,mode="map",cur=null;const seen=new Set(),done=new Set();const need=i=>SITES[i]&&SITES[i].req!=null?SITES[i].req:50*i*(i+2);const unlocked=i=>i===0||score>=need(i)||done.has(SITES[i].id);
 const $=id=>document.getElementById(id);
 const cv=$("c"),ctx=cv.getContext("2d");let W=0,H=0;
 function resize(){const d=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0)}
@@ -117,6 +118,7 @@ function icon(id,x,y,k){ctx.save();ctx.translate(x,y);ctx.scale(k,k);ctx.fillSty
  case"hitan":ctx.beginPath();ctx.ellipse(-1,2,9,5,0,0,7);ctx.fill();ctx.beginPath();ctx.moveTo(7,2);ctx.lineTo(12,-3);ctx.lineTo(12,6);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(-2,-3);ctx.lineTo(-2,-8);ctx.moveTo(-5,-7);ctx.lineTo(1,-7);ctx.stroke();break;
  case"matruh":ctx.beginPath();ctx.moveTo(-10,2);ctx.quadraticCurveTo(-5,-5,0,2);ctx.quadraticCurveTo(5,9,10,2);ctx.stroke();ctx.beginPath();ctx.arc(5,-5,3,0,7);ctx.fill();break;
  case"kharga":ctx.beginPath();ctx.moveTo(-8,8);ctx.lineTo(-8,-1);ctx.arc(0,-1,8,Math.PI,0);ctx.lineTo(8,8);ctx.closePath();ctx.fill();break;
+ case"gouna":ctx.fillRect(-9,-1,18,9);ctx.beginPath();ctx.moveTo(-9,-3);ctx.lineTo(9,-8);ctx.lineTo(9,-4);ctx.lineTo(-9,1);ctx.closePath();ctx.fill();break;
  case"redsea":ctx.beginPath();ctx.ellipse(-1,0,8,5,0,0,7);ctx.fill();ctx.beginPath();ctx.moveTo(6,0);ctx.lineTo(11,-5);ctx.lineTo(11,5);ctx.closePath();ctx.fill();break}
  ctx.restore()}
 function drawMap(t){
@@ -158,7 +160,7 @@ function drawMap(t){
   if(st.id===dailyId&&dailyClaim!==today()&&!lk){ctx.font="16px system-ui";ctx.textAlign="center";ctx.fillStyle="#fff";ctx.fillText("⭐",x+R,y+bob-R+4)}
   if(on||MV.z>1.35||W>720){ctx.font="bold 12px system-ui";const nm=ar?st.ar:st.en,w=ctx.measureText(nm).width+14;ctx.fillStyle="rgba(20,26,40,.82)";rr(x-w/2,y+R+10,w,20,10);ctx.fill();ctx.fillStyle="#fff4d0";ctx.textAlign="center";ctx.fillText(nm,x,y+R+24)}});
 }
-function mapPick(px,py){if(gs){const[gx,gy]=mp(gs.lo,gs.la);if(Math.hypot(px-gx,py-gy)<36){if(gs.cursed){const n=loseBal(20);gfx.push({x:gx,y:gy,t0:performance.now(),txt:n?"−"+n+" ☠":"🛡️",bad:true});gs=null;snd("bad");render();return}gfx.push({x:gx,y:gy,t0:performance.now()});gs=null;score+=15;qAdd("scarab",1);snd("ok");render();return}}let best=null,bd=26;SITES.forEach((s,k)=>{if(!unlocked(k))return;const[x,y]=mp(s.lon,s.lat),d=Math.hypot(px-x,py-y);if(d<bd){bd=d;best=s}});if(best)select(best.id)}
+function mapPick(px,py){if(gs){const[gx,gy]=mp(gs.lo,gs.la);if(Math.hypot(px-gx,py-gy)<36){if(gs.cursed){const n=loseBal(Math.round(20*RATE));gfx.push({x:gx,y:gy,t0:performance.now(),txt:n?"−"+n+" ☠":"🛡️",bad:true});gs=null;snd("bad");render();return}gfx.push({x:gx,y:gy,t0:performance.now()});gs=null;score+=Math.round(15*RATE);qAdd("scarab",1);snd("ok");render();return}}let best=null,bd=26;SITES.forEach((s,k)=>{if(!unlocked(k))return;const[x,y]=mp(s.lon,s.lat),d=Math.hypot(px-x,py-y);if(d<bd){bd=d;best=s}});if(best)select(best.id)}
 
 /* ---------- WORLD BUILDING BLOCKS ---------- */
 const B=(x,y,w,h,c="#cfa86a",s=true)=>({t:"blk",x,y,w,h,c,s});
@@ -290,12 +292,12 @@ function worldTap(sx,sy){if(runWon)return;const wx=(sx-V.ox)/V.z,wy=(sy-V.oy)/V.
  cur.arts.forEach((a,i)=>{if(found.has(i))return;const d=Math.hypot(a[0]-wx,a[1]-wy);if(d<bd){bd=d;bi=i}});
  const now=performance.now();
  if(bi<0){fx.push({k:"miss",x:wx,y:wy,t0:now});snd("miss");huntMiss++;return}
- found.add(bi);lastFindT=performance.now();score+=20;snd("ok");const a=cur.arts[bi];fx.push({k:"pop",x:a[0],y:a[1],t0:now},{k:"txt",s:"+20",x:a[0],y:a[1]-10,t0:now});
+ found.add(bi);lastFindT=performance.now();score+=Math.round(20*RATE);snd("ok");const a=cur.arts[bi];fx.push({k:"pop",x:a[0],y:a[1],t0:now},{k:"txt",s:"+"+Math.round(20*RATE),x:a[0],y:a[1]-10,t0:now});
  if(found.size===cur.arts.length)winGame(huntMiss<=4&&huntHints===0?3:huntMiss<=10&&huntHints<=1?2:1);
  render()}
 
 /* ---------- MINI-GAMES (one different challenge per world) ---------- */
-const CH={giza:["Hidden artifacts","القطع المخفية"],alex:["Pharos signal memory","ذاكرة إشارات الفنار"],luxor:["Hieroglyph memory match","مطابقة الرموز"],philae:["Light the temple columns","أضئ أعمدة المعبد"],abu:["Sun alignment timing","تعامد الشمس"],siwa:["Sliding picture puzzle","أحجية الصورة المنزلقة"],edfu:["Rotate the temple tiles","دوّر قطع المعبد"],sinai:["Order the monuments by age","رتّب المعالم حسب العمر"],redsea:["Count the orange fish","عدّ الأسماك البرتقالية"],abydos:["Spot the odd hieroglyph","اعثر على الرمز المختلف"],whitedesert:["Stack the chalk rocks","كدّس الصخور الطباشيرية"],hitan:["Connect the whale bones","صل عظام الحوت"],matruh:["Catch the pearls (timing)","اصطد اللآلئ (توقيت)"],kharga:["Symbol grid puzzle","أحجية شبكة الرموز"]};
+const CH={giza:["Hidden artifacts","القطع المخفية"],alex:["Pharos signal memory","ذاكرة إشارات الفنار"],luxor:["Hieroglyph memory match","مطابقة الرموز"],philae:["Light the temple columns","أضئ أعمدة المعبد"],abu:["Sun alignment timing","تعامد الشمس"],siwa:["Sliding picture puzzle","أحجية الصورة المنزلقة"],edfu:["Rotate the temple tiles","دوّر قطع المعبد"],sinai:["Order the monuments by age","رتّب المعالم حسب العمر"],redsea:["Count the orange fish","عدّ الأسماك البرتقالية"],abydos:["Spot the odd hieroglyph","اعثر على الرمز المختلف"],whitedesert:["Stack the chalk rocks","كدّس الصخور الطباشيرية"],hitan:["Connect the whale bones","صل عظام الحوت"],matruh:["Catch the pearls (timing)","اصطد اللآلئ (توقيت)"],kharga:["Symbol grid puzzle","أحجية شبكة الرموز"],gouna:["Egyptian movie quiz","أسئلة عن الأفلام المصرية"]};
 const L2=(en,ar)=>lang==="ar"?ar:en;
 const rr=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h)};
 
@@ -571,11 +573,66 @@ GAMES.kharga=(()=>{const SYM=["ankh","scarab","eye","coin","feather","lotus"];le
   g.forEach((v,i)=>{const x=x0+(i%N)*s,y=y0+Math.floor(i/N)*s;ctx.fillStyle=fixed[i]?"rgba(180,150,100,.9)":"rgba(255,244,214,.8)";rr(x+3,y+3,s-6,s-6,8);ctx.fill();ctx.strokeStyle=conflict(i)?"#d9534f":"#8a6a35";ctx.lineWidth=conflict(i)?4:2;ctx.stroke();if(v)glyph(SYM[v-1],x+s/2,y+s/2,s/46)})},
  tap(px,py){if(won)return;const{s,x0,y0}=lay(),c=Math.floor((px-x0)/s),r=Math.floor((py-y0)/s);if(c<0||c>=N||r<0||r>=N)return;const i=r*N+c;if(fixed[i])return;g[i]=(g[i]+1)%(N+1);snd("tap");
   if(g.every(v=>v)&&g.every((v,k)=>!conflict(k))){won=true;const sec=(performance.now()-t0)/1000;winGame(sec<=empty*5?3:sec<=empty*10?2:1)}}}})();
-WORLDS.alex.game=GAMES.alex;WORLDS.siwa={w:1400,h:1000,items:[],arts:[],game:GAMES.siwa};WORLDS.edfu={w:1400,h:1000,items:[],arts:[],game:GAMES.edfu};WORLDS.sinai={w:1400,h:1000,items:[],arts:[],game:GAMES.sinai};WORLDS.redsea={w:1400,h:1000,items:[],arts:[],game:GAMES.redsea};for(const k of["abydos","whitedesert","hitan","matruh","kharga"])WORLDS[k]={w:1400,h:1000,items:[],arts:[],game:GAMES[k]};WORLDS.luxor.game=GAMES.luxor;WORLDS.philae.game=GAMES.philae;WORLDS.abu.game=GAMES.abu;
+/* El Gouna Film Festival: Egyptian movie quiz (scene / actor / punchline / line) */
+GAMES.gouna=(()=>{
+ const FILMS=["الإرهاب والكباب","طيور الظلام","عمارة يعقوبيان","صعيدي في الجامعة الأمريكية","همام في أمستردام","إسماعيلية رايح جاي","الناظر","الكيف","إبراهيم الأبيض","عنتر شايل سيفه","ابن حميدو","سكر هانم","عبود على الحدود","بخيت وعديلة","الفيل الأزرق","الجزيرة","خلي بالك من زوزو","باب الحديد","الأرض","شيء من الخوف","إشاعة حب","اللمبي"];
+ const MEN=["عادل إمام","محمد هنيدي","يحيى الفخراني","محمود عبد العزيز","علاء ولي الدين","أحمد زكي","محمد سعد","أحمد حلمي","نور الشريف","يوسف وهبي","توفيق الدقن","عبد المنعم مدبولي","إسماعيل ياسين","كريم عبد العزيز","أحمد مكي","محمد رمضان"];
+ const WOMEN=["زينات صدقي","ماري منيب","تحية كاريوكا","سعاد حسني","فاتن حمامة","شادية","يسرا","ميرفت أمين","نادية الجندي","لبلبة"];
+ const TY={film:["الإيفيه دا من فيلم إيه؟","Which film is this line from?"],actor:["الممثل دا كان اسمه إيه؟","What was this actor's name?"],scene:["المشهد دا من فيلم إيه؟","Which film is this scene from?"],punch:["الإيفيه في المشهد دا إيه؟","What's the punchline in this scene?"]};
+ const F=(q,a)=>({t:"film",q:'"'+q+'"',a,pool:FILMS}),A=(q,a,pool,w)=>({t:"actor",q,a,pool,w}),S=(q,a)=>({t:"scene",q,a,pool:FILMS}),P=(q,a,w)=>({t:"punch",q,a,w});
+ const BANK=[
+  F("دا أنا حمار يا بيه","عنتر شايل سيفه"),F("انت جاي تعزي ولا جاي تهزر؟","الكيف"),F("كابتن كابتن هو كله ضرب ضرب مفيش شتيمة","الناظر"),F("الإنسان دعيف","إبراهيم الأبيض"),F("إنسان الغاب طويل الناب","ابن حميدو"),F("ست أنا مش شايف قدامي","سكر هانم"),F("دنا بدهبزه ودهرزه","الكيف"),F("قولي عملك إيه كرشي","عبود على الحدود"),F("ماما يا روح أمك","إشاعة حب"),
+  A('مين الممثل اللي قال "دا أنا حمار يا بيه" في فيلم عنتر شايل سيفه؟',"عادل إمام",MEN),
+  A('مين الممثل اللي لعب شخصية "خلف الدهشوري خلف" في صعيدي في الجامعة الأمريكية؟',"محمد هنيدي",MEN),
+  A('مين قال "انت جاي تعزي ولا جاي تهزر؟ لأ أنا جاي أهزر" في فيلم الكيف؟',"يحيى الفخراني",MEN),
+  A('مين الممثلة اللي قالت "إنسان الغاب طويل الناب" في فيلم ابن حميدو؟',"زينات صدقي",WOMEN),
+  A('مين الممثل اللي قال "الإنسان دعيف" في فيلم إبراهيم الأبيض؟',"محمود عبد العزيز",MEN),
+  A('مين الممثل اللي قال "كابتن كابتن" في فيلم الناظر؟',"علاء ولي الدين",MEN),
+  A("مين بطل فيلم الإرهاب والكباب؟","عادل إمام",MEN),
+  A('مين الممثل اللي قال "ست أنا مش شايف قدامي" في فيلم سكر هانم؟',"عبد الفتاح القصري",MEN),
+  A('مين الممثل اللي قال "ماما يا روح أمك" في فيلم إشاعة حب؟',"يوسف وهبي",MEN),
+  A("مين بطل فيلم همام في أمستردام؟","محمد هنيدي",null,["أحمد حلمي","محمد سعد","كريم عبد العزيز","أحمد مكي","عادل إمام"]),
+  A("مين الممثل اللي شارك هنيدي بطولة إسماعيلية رايح جاي؟","محمد فؤاد",null,["أحمد حلمي","محمد سعد","كريم عبد العزيز","أحمد مكي","عادل إمام"]),
+  S("مشهد: شاب مصري واقف في المحكمة بيعترف إنه اتضحك عليه في إيطاليا بعد عقد عمل مزور","عنتر شايل سيفه"),
+  S("مشهد: موظف غلبان ماسك سلاح في مجمع التحرير والناس فاكرينهم رهائن","الإرهاب والكباب"),
+  S("مشهد: شاب جاي من الصعيد يتعلم في الجامعة الأمريكية ويقع في مواقف مضحكة","صعيدي في الجامعة الأمريكية"),
+  S("مشهد: رحلة سفر مليانة مغامرات ومقالب لشاب مصري في أمستردام","همام في أمستردام"),
+  S("مشهد: حكايات ناس ساكنين في عمارة قديمة بوسط القاهرة، عن رواية لعلاء الأسواني","عمارة يعقوبيان"),
+  S("مشهد: حد بيسأل واحد في عزاء: جاي تعزي ولا جاي تهزر؟","الكيف"),
+  S('مشهد: ناظر مدرسة وطلبة مشاغبين، وواحد بيقول "كابتن كابتن"',"الناظر"),
+  S("مشهد: فيلم بطولة محمد فؤاد ومحمد هنيدي عن حلم الشهرة","إسماعيلية رايح جاي"),
+  P("عنتر في المحكمة بيعترف إنه اتضحك عليه، قال إيه للقاضي؟","دا أنا حمار يا بيه",["دا أنا بريء يا بيه","دي مؤامرة يا بيه","أنا ماكنتش أعرف حاجة يا بيه"]),
+  P("في فيلم الكيف سألوه: انت جاي تعزي ولا جاي تهزر؟ رد إزاي؟","لأ أنا جاي أهزر",["أنا جاي أعزي طبعاً","لأ أنا جاي أشرب شاي","مش فاكر جاي ليه"]),
+  P('زينات صدقي في ابن حميدو بتقول: "إنسان الغاب..." كمّل',"طويل الناب",["قصير القامة","واسع الباب","عالي الصوت"]),
+  P('محمود عبد العزيز في إبراهيم الأبيض بيقول: "الإنسان..." كمّل زي ما اتقالت في الفيلم',"دعيف",["ضعيف","رهيف","لطيف"]),
+  P('محمود عبد العزيز في الكيف: "دنا بدهبزه ودهرزه عشان..." كمّل',"يبرعش",["يتسطل","ينام","يهدى"]),
+  P('علاء ولي الدين في الناظر: "كابتن كابتن هو كله ضرب ضرب مفيش..." كمّل',"شتيمة",["حكم","جزاء","كورة"]),
+  P('عبد الفتاح القصري في سكر هانم: "ست أنا مش شايف..." كمّل',"قدامي",["حاجة","كويس","خالص"]),
+  P('علاء ولي الدين في عبود على الحدود: "قولي عملك إيه كرشي، كرشي..." كمّل',"اللي إنت ناسيه",["اللي في بطني","اللي مش بيشبع","اللي إنت قاعد عليه"])];
+ let qs=[],qi=0,opts=[],picked=-1,errs=0,qEnd=0,tlim=0,nq=5,wait=false;
+ const shuf=a=>{for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
+ function load(){const q=qs[qi],n=LV()<2?3:4;let wrong=q.w?[...q.w]:q.pool.filter(x=>x!==q.a);wrong=shuf(wrong).slice(0,n-1);opts=shuf([q.a,...wrong]);picked=-1;wait=false;qEnd=tlim?performance.now()+tlim*1000:0}
+ const next=()=>{qi++;if(qi>=nq)winGame(errs===0?3:errs<=1?2:1);else load()};
+ const lay=()=>{const bw=Math.min(W-70,420);ctx.font="bold 22px system-ui";const ls=wrapT(qs[qi].q,bw),top=Math.max(176,128+ls.length*30+26),bh=Math.max(40,Math.min(68,(H-top-60)/opts.length-10));return{bw,ls,top,bh,x:(W-bw)/2}};
+ return{help:{en:"Egyptian movie quiz! Which film is a scene or a line from, who the actor is, and what the punchline is.",ar:"أسئلة عن الأفلام المصرية! المشهد ده من فيلم إيه، الإيفيه ده من فيلم إيه، الممثل ده مين، والإيفيه في المشهد ده إيه."},
+ start(){const x=LV(),types=x<1?["film","actor"]:x<2?["film","actor","scene"]:["film","actor","scene","punch"];nq=5+Math.min(x,5);tlim=x>=3?Math.max(8,20-(x-3)*6):0;
+  qs=shuf(BANK.filter(q=>types.includes(q.t))).slice(0,nq);nq=qs.length;qi=0;errs=0;load()},
+ status(){return L2("Question ","السؤال ")+Math.min(qi+1,nq)+"/"+nq+" · "+L2("Mistakes ","الأخطاء ")+errs},
+ draw(t){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#3a0f1c");g.addColorStop(1,"#0e0a1a");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  const sp=ctx.createRadialGradient(W/2,60,10,W/2,60,W*.7);sp.addColorStop(0,"rgba(255,224,138,.28)");sp.addColorStop(1,"rgba(255,224,138,0)");ctx.fillStyle=sp;ctx.fillRect(0,0,W,H);
+  if(W>=340){ctx.fillStyle="#0a0a0f";ctx.fillRect(4,0,22,H);ctx.fillRect(W-26,0,22,H);ctx.fillStyle="#d8c8a0";for(let y=((t/40)%26)-26;y<H;y+=26){ctx.fillRect(9,y,12,14);ctx.fillRect(W-21,y,12,14)}}
+  if(!qs[qi])return;const q=qs[qi],{bw,ls,top,bh,x}=lay(),ar=lang==="ar";ctx.textAlign="center";
+  ctx.font="bold 15px system-ui";ctx.fillStyle="#e6b84a";ctx.fillText("🎬 "+(ar?TY[q.t][0]:TY[q.t][1]),W/2,112);if(!ar){ctx.font="13px system-ui";ctx.fillStyle="#c9b27a";ctx.fillText(TY[q.t][0],W/2,132)}
+  ctx.font="bold 22px system-ui";ctx.fillStyle="#fff";ls.forEach((l,k)=>ctx.fillText(l,W/2,Math.max(166,160)+k*30));
+  if(tlim&&picked<0&&qEnd){const left=Math.max(0,(qEnd-t)/(tlim*1000));ctx.fillStyle="rgba(255,255,255,.18)";ctx.fillRect(x,top-14,bw,5);ctx.fillStyle=left<.3?"#d9534f":"#e6b84a";ctx.fillRect(x,top-14,bw*left,5);if(left<=0&&!wait){wait=true;errs++;snd("bad");picked=-2;setTimeout(next,1100)}}
+  opts.forEach((o,k)=>{const y=top+k*(bh+10);let c="#2a2a45";if(picked!==-1){if(o===q.a)c="#2e7d4f";else if(k===picked)c="#a33a3a"}ctx.fillStyle=c;rr(x,y,bw,bh,14);ctx.fill();ctx.strokeStyle="#e6b84a";ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle="#fff";ctx.font="18px system-ui";ctx.fillText(o,W/2,y+bh/2+6)})},
+ tap(px,py){if(picked!==-1||wait||!qs[qi])return;const{bw,top,bh,x}=lay(),k=opts.findIndex((o,i)=>{const y=top+i*(bh+10);return px>=x&&px<=x+bw&&py>=y&&py<=y+bh});if(k<0)return;
+  picked=k;wait=true;if(opts[k]===qs[qi].a)snd("ok");else{errs++;snd("bad")}setTimeout(next,950)}}})();
+WORLDS.alex.game=GAMES.alex;WORLDS.siwa={w:1400,h:1000,items:[],arts:[],game:GAMES.siwa};WORLDS.edfu={w:1400,h:1000,items:[],arts:[],game:GAMES.edfu};WORLDS.sinai={w:1400,h:1000,items:[],arts:[],game:GAMES.sinai};WORLDS.redsea={w:1400,h:1000,items:[],arts:[],game:GAMES.redsea};for(const k of["abydos","whitedesert","hitan","matruh","kharga","gouna"])WORLDS[k]={w:1400,h:1000,items:[],arts:[],game:GAMES[k]};WORLDS.luxor.game=GAMES.luxor;WORLDS.philae.game=GAMES.philae;WORLDS.abu.game=GAMES.abu;
 let lastS="";
 /* ---------- BONUS GAMES (replayable, earn extra points) ---------- */
 let bonusMode=false;
-function finishBonus(p){$("dnext").style.display=$("dre").style.display="none";p*=eventMult();snd("win");confetti();qAdd("bonus",1);score+=p;render();$("dh").textContent=L2("Great job!","أحسنت!");$("dp").textContent=L2("You earned +"+p+" points","ربحت +"+p+" نقطة");$("dbtn").textContent=L2("Back to map","العودة للخريطة");$("done").style.display="flex"}
+function finishBonus(p){$("dnext").style.display=$("dre").style.display="none";p=Math.round(p*eventMult()*RATE);snd("win");confetti();qAdd("bonus",1);score+=p;render();$("dh").textContent=L2("Great job!","أحسنت!");$("dp").textContent=L2("You earned +"+p+" points","ربحت +"+p+" نقطة");$("dbtn").textContent=L2("Back to map","العودة للخريطة");$("done").style.display="flex"}
 const wrapT=(tx,w)=>{const ws=tx.split(" "),ls=[];let c="";ws.forEach(x=>{const n=c?c+" "+x:x;if(ctx.measureText(n).width>w&&c){ls.push(c);c=x}else c=n});if(c)ls.push(c);return ls};
 const pr=[...Array(0)];
 /* Scarab Rush */
@@ -688,10 +745,10 @@ const LOGIN=[{p:30},{p:40,hint:2},{p:60},{p:60,time:2},{p:80,hint:3},{p:100,boos
 const MS={3:{p:100},7:{p:250,hint:3},14:{p:500,freeze:1},30:{p:1000,hint:10,boost:3},60:{p:2000,hint:15},100:{p:5000,hint:30}};
 const QALL={p:100,hint:2};
 const QDEFS=[{id:"win",en:"Win 2 levels",ar:"اربح مستويين",goal:2,rw:{p:50}},{id:"star",en:"Earn 4 stars",ar:"اجمع 4 نجوم",goal:4,rw:{p:60}},{id:"bonus",en:"Play 2 bonus games",ar:"العب لعبتين إضافيتين",goal:2,rw:{p:40,time:1}},{id:"scarab",en:"Catch a golden scarab on the map",ar:"اصطد جعرانًا ذهبيًا على الخريطة",goal:1,rw:{p:30,hint:1}},{id:"three",en:"Get a 3-star win",ar:"احصل على فوز بـ3 نجوم",goal:1,rw:{p:80}},{id:"hard",en:"Win a level 3 or higher",ar:"اربح مستوى 3 أو أعلى",goal:1,rw:{p:70,hint:1}}];
-function rewardTxt(r){const a=[];if(r.p)a.push("+"+r.p+" "+L2("pts","نقطة"));if(r.hint)a.push("+"+r.hint+" 💡");if(r.time)a.push("+"+r.time+" ⏱️");if(r.boost)a.push("+"+r.boost+" ⚡");if(r.freeze)a.push("+"+r.freeze+" 🧊");return a.join(" · ")}
-function giveReward(r){score+=r.p||0;inv.hint+=r.hint||0;inv.time+=r.time||0;inv.boost+=r.boost||0;inv.freeze=(inv.freeze||0)+(r.freeze||0);return rewardTxt(r)}
+function rewardTxt(r){const a=[];if(r.p)a.push("+"+Math.round(r.p*RATE)+" "+L2("pts","نقطة"));if(r.hint)a.push("+"+r.hint+" 💡");if(r.time)a.push("+"+r.time+" ⏱️");if(r.boost)a.push("+"+r.boost+" ⚡");if(r.freeze)a.push("+"+r.freeze+" 🧊");return a.join(" · ")}
+function giveReward(r){score+=Math.round((r.p||0)*RATE);inv.hint+=r.hint||0;inv.time+=r.time||0;inv.boost+=r.boost||0;inv.freeze=(inv.freeze||0)+(r.freeze||0);return rewardTxt(r)}
 function touchDay(){const t=today();if(lastDay===t)return;freezeUsed=false;curseTax=0;
- if(lastDay===dstr(-1))streak++;else if(lastDay===dstr(-2)&&(inv.freeze||0)>0){inv.freeze--;streak++;freezeUsed=true}else{if(lastDay){const away=Math.round((new Date(t)-new Date(lastDay))/864e5);curseTax=loseBal(Math.min(100,Math.max(20,Math.round(bal()*.05*(away-1)))))}streak=1}
+ if(lastDay===dstr(-1))streak++;else if(lastDay===dstr(-2)&&(inv.freeze||0)>0){inv.freeze--;streak++;freezeUsed=true}else{if(lastDay){const away=Math.round((new Date(t)-new Date(lastDay))/864e5);curseTax=loseBal(Math.min(Math.round(100*RATE),Math.max(Math.round(20*RATE),Math.round(bal()*.05*(away-1)))))}streak=1}
  loginDay=streak>1?(loginDay%7)+1:1;lastDay=t;pendingMs=MS[streak]||null;loginPending=true}
 function newQuestDay(){const d=today();if(qDay===d&&qIds.length===3)return;qDay=d;let h=0;for(const c of d)h=(h*31+c.charCodeAt(0))>>>0;const ids=QDEFS.map(q=>q.id),pick=[];while(pick.length<3){h=(h*1103515245+12345)>>>0;const id=ids[h%ids.length];if(!pick.includes(id))pick.push(id)}qIds=pick;qp={};qcl={}}
 function qAdd(id,n){newQuestDay();if(qIds.includes(id)&&!qcl[id]){const q=QDEFS.find(x=>x.id===id),was=qp[id]||0;qp[id]=Math.min(q.goal,was+n);if(was<q.goal&&qp[id]>=q.goal){toastTx="📋 "+L2("Quest done: ","أنجزت المهمة: ")+(lang==="ar"?q.ar:q.en)+" — "+L2("claim it!","استلمها!");toastT=performance.now()+3500}}}
@@ -715,9 +772,9 @@ async function scheduleReminders(){try{const LN=window.Capacitor&&window.Capacit
  if(chestAt>Date.now())list.push({id:2,title,body:L2("Your free treasure chest is ready 🎁","صندوق الكنز المجاني جاهز 🎁"),schedule:{at:new Date(chestAt),allowWhileIdle:true}});await LN.schedule({notifications:list})}catch(e){}}
 
 /* ---------- GAMEPLAY V2: intro popup, speed stars, celebration, level scaling ---------- */
-const PAR={giza:60,alex:45,luxor:50,philae:60,abu:35,siwa:70,edfu:50,sinai:30,redsea:45,abydos:40,whitedesert:35,hitan:35,matruh:30,kharga:80};
+const PAR={giza:60,alex:45,luxor:50,philae:60,abu:35,siwa:70,edfu:50,sinai:30,redsea:45,abydos:40,whitedesert:35,hitan:35,matruh:30,kharga:80,gouna:45};
 const parOf=id=>Math.round((PAR[id]||45)*(1+.35*(Math.min(curLevel,8)-1)));
-const STX={giza:["Few wrong taps and no hints","أخطاء قليلة وبدون تلميحات"],alex:["No mistakes in the sequence","بدون أخطاء في التسلسل"],luxor:["Match the pairs with few flips","طابق الأزواج بقلبات قليلة"],philae:["Few moves and few hints","حركات قليلة وتلميحات قليلة"],abu:["Don't miss the alignment","لا تُخطئ في التعامد"],siwa:["Solve it in few moves","حلّها بحركات قليلة"],edfu:["Solve it in few moves","حلّها بحركات قليلة"],sinai:["No wrong taps","بدون ضغطات خاطئة"],redsea:["Count correctly the first time","عدّ بشكل صحيح من أول مرة"],abydos:["Few wrong taps","ضغطات خاطئة قليلة"],whitedesert:["Don't let the rocks crash","لا تدع الصخور تقع"],hitan:["Tap the bones in order, no wrong taps","اضغط العظام بالترتيب بدون أخطاء"],matruh:["Catch every pearl on time","اصطد كل لؤلؤة في وقتها"],kharga:["Fill the grid quickly","املأ الشبكة بسرعة"]};
+const STX={giza:["Few wrong taps and no hints","أخطاء قليلة وبدون تلميحات"],alex:["No mistakes in the sequence","بدون أخطاء في التسلسل"],luxor:["Match the pairs with few flips","طابق الأزواج بقلبات قليلة"],philae:["Few moves and few hints","حركات قليلة وتلميحات قليلة"],abu:["Don't miss the alignment","لا تُخطئ في التعامد"],siwa:["Solve it in few moves","حلّها بحركات قليلة"],edfu:["Solve it in few moves","حلّها بحركات قليلة"],sinai:["No wrong taps","بدون ضغطات خاطئة"],redsea:["Count correctly the first time","عدّ بشكل صحيح من أول مرة"],abydos:["Few wrong taps","ضغطات خاطئة قليلة"],whitedesert:["Don't let the rocks crash","لا تدع الصخور تقع"],hitan:["Tap the bones in order, no wrong taps","اضغط العظام بالترتيب بدون أخطاء"],matruh:["Catch every pearl on time","اصطد كل لؤلؤة في وقتها"],kharga:["Fill the grid quickly","املأ الشبكة بسرعة"],gouna:["Few mistakes and fast answers","أخطاء قليلة وإجابات سريعة"]};
 function showIntro(go,opt){opt=opt||{};if(!opt.bonus&&!sel&&lastSite)sel=lastSite;if(!opt.bonus&&!sel)return;const ar=lang==="ar",m=$("bmenu"),g=cur&&cur.game;
  const help=g?g.help[ar?"ar":"en"]:(ar?"ابحث عن القطع الأثرية المخفية في المشهد ("+(6+Math.min(LV(),5))+" قطع) واضغط عليها. اسحب للتحرك وقرّب بالأصابع. استخدم 💡 إذا علقت.":"Find the hidden artifacts ("+(6+Math.min(LV(),5))+") in the scene and tap them. Drag to move around and pinch to zoom. Use 💡 if you get stuck.");
  const title=opt.bonus?cur.bonus[ar?1:0]:(ar?sel.ar:sel.en);
@@ -741,6 +798,7 @@ function drawCeleb(t){if(!celeb)return;const k=(t-celeb.t0)/1800;if(k>1){celeb=n
 
 /* ---------- STARS, LEVELS, SHOP ---------- */
 const SR={},own=new Set();let spent=0,theme="classic";const inv={hint:5,time:0,boost:0,freeze:0,ward:0};
+const RATE=.25;/* global points multiplier: lower = fewer points earned */
 const bal=()=>score-spent;
 let curseOn=false,curseRun=false,curseLost=0,lastCurse=false,curseTax=0;
 function loseBal(n){if((inv.ward||0)>0&&n>0){inv.ward--;toastTx="🛡️ "+L2("Ward blocked the curse!","الدرع صدّ اللعنة!");toastT=performance.now()+1500;return 0}n=Math.min(n,Math.max(0,bal()));if(n>0)spent+=n;return n}
@@ -765,7 +823,7 @@ function openShop(){const ar=lang==="ar",m=$("bmenu");
  m.style.display="flex";$("shc").onclick=()=>{m.style.display="none"};
  m.querySelectorAll("[data-i]").forEach(x=>x.onclick=()=>{const it=ITEMS.find(i=>i.id===x.dataset.i);if(!it||bal()<it.cost||(it.once&&own.has(it.id)))return;spent+=it.cost;it.buy();snd("ok");render();openShop()});
  m.querySelectorAll("[data-th]").forEach(x=>x.onclick=()=>{theme=x.dataset.th;render();openShop()})}
-function lvInfo(id,lv){const x=lv-1,k=Math.min(x,4),g=n=>n+"×"+n,m=Math.min;const q={giza:()=>L2((6+m(x,5))+" artifacts",(6+m(x,5))+" قطع"),alex:()=>L2((5+m(x,7))+" signals",(5+m(x,7))+" إشارات"),luxor:()=>L2(m(4+x,8)+" pairs",m(4+x,8)+" أزواج"),philae:()=>g([4,5,5,6,6][k]),abu:()=>L2((3+Math.round(m(x,4)*.75))+" alignments",(3+Math.round(m(x,4)*.75))+" تعامدات"),siwa:()=>g([3,3,4,4,5][k]),edfu:()=>g([2,3,3,4,5][k]),sinai:()=>L2(m(3+x,8)+" monuments",m(3+x,8)+" معالم"),redsea:()=>L2((3+Math.floor(m(x,4)/2))+" rounds",(3+Math.floor(m(x,4)/2))+" جولات"),abydos:()=>g(3+m(x,4)),whitedesert:()=>L2((6+m(x,6))+" rocks",(6+m(x,6))+" صخور"),hitan:()=>L2(m(18,8+m(x,5)*2)+" bones",m(18,8+m(x,5)*2)+" عظمة"),matruh:()=>L2((8+m(x,6)*2)+" pearls",(8+m(x,6)*2)+" لؤلؤة"),kharga:()=>g(4+(x>=2?1:0)+(x>=4?1:0))};return q[id]?q[id]():""}
+function lvInfo(id,lv){const x=lv-1,k=Math.min(x,4),g=n=>n+"×"+n,m=Math.min;const q={giza:()=>L2((6+m(x,5))+" artifacts",(6+m(x,5))+" قطع"),alex:()=>L2((5+m(x,7))+" signals",(5+m(x,7))+" إشارات"),luxor:()=>L2(m(4+x,8)+" pairs",m(4+x,8)+" أزواج"),philae:()=>g([4,5,5,6,6][k]),abu:()=>L2((3+Math.round(m(x,4)*.75))+" alignments",(3+Math.round(m(x,4)*.75))+" تعامدات"),siwa:()=>g([3,3,4,4,5][k]),edfu:()=>g([2,3,3,4,5][k]),sinai:()=>L2(m(3+x,8)+" monuments",m(3+x,8)+" معالم"),redsea:()=>L2((3+Math.floor(m(x,4)/2))+" rounds",(3+Math.floor(m(x,4)/2))+" جولات"),abydos:()=>g(3+m(x,4)),whitedesert:()=>L2((6+m(x,6))+" rocks",(6+m(x,6))+" صخور"),hitan:()=>L2(m(18,8+m(x,5)*2)+" bones",m(18,8+m(x,5)*2)+" عظمة"),matruh:()=>L2((8+m(x,6)*2)+" pearls",(8+m(x,6)*2)+" لؤلؤة"),kharga:()=>g(4+(x>=2?1:0)+(x>=4?1:0)),gouna:()=>L2((5+m(x,5))+" questions",(5+m(x,5))+" أسئلة")};return q[id]?q[id]():""}
 function openLevels(){const ar=lang==="ar",m=$("bmenu"),b=SR[sel.id]||(SR[sel.id]=[0,0,0,0,0]);
  m.innerHTML='<div class="box"><h2 style="color:var(--gold);margin:0 0 4px">'+(ar?sel.ar:sel.en)+'</h2><p style="margin:0 0 6px;color:var(--mut);font-size:13px">🎮 '+CH[sel.id][ar?1:0]+" · "+L2("Earn a star to unlock the next level","اربح نجمة لفتح المستوى التالي")+'</p><button class="bbtn" id="cm" style="text-align:center">☠ '+L2("Curse mode: ","وضع اللعنة: ")+(curseOn?L2("ON","مفعّل"):L2("OFF","متوقف"))+'<small>'+L2("Mistakes cost points, but your reward is ×2","كل خطأ يخسّرك نقاطًا، لكن مكافأتك ×2")+'</small></button>'+
  [0,1,2,3,4].map(i=>{const lk=i>0&&!b[i-1];return'<button class="bbtn" data-l="'+(i+1)+'"'+(lk?" disabled":"")+'><b>'+(lk?"🔒 ":"")+L2("Level ","المستوى ")+(i+1)+" · "+LVN[i][ar?1:0]+'</b><small>'+starTxt(b[i])+" · "+lvInfo(sel.id,i+1)+'</small></button>'}).join("")+(b[4]?'<button class="bbtn" data-l="'+((ENDL[sel.id]||5)+1)+'"><b>♾ '+L2("Endless","لا نهائي")+" · "+L2("Level ","المستوى ")+((ENDL[sel.id]||5)+1)+'</b><small>'+L2("Beat it to climb higher. It never ends!","اجتزه لتصعد أعلى. لا ينتهي أبدًا!")+'</small></button>':"")+
@@ -777,10 +835,10 @@ function winGameCore(perf){perf=Math.max(1,Math.min(3,perf||1));const el=(perfor
  if(endless){if(imp)ENDL[id]=curLevel}else if(imp)b[li]=stars;
  lastStars=stars;lastLvlUnlock=!endless&&li<4&&prev===0;done.add(id);lastDaily=claimDaily(id);p+=lastDaily;lastBoost=false;if(inv.boost>0){p=Math.round(p*1.5);inv.boost--;lastBoost=true}
  lastEvent=eventMult()>1;if(lastEvent)p*=2;lastCurse=curseRun;if(curseRun)p*=2;if(stars===3)inv.hint++;qAdd("win",1);qAdd("star",stars);if(stars===3)qAdd("three",1);if(curLevel>=3)qAdd("hard",1);
- lastWin=p;score+=p;try{celebrate(stars)}catch(e){showErr("celebration: "+e.message)}render();setTimeout(()=>{try{showDone()}catch(e){showErr("result: "+e.message);fallbackDone()}},1900)}
+ p=Math.max(1,Math.round(p*RATE));lastDaily=Math.round(lastDaily*RATE);lastWin=p;score+=p;try{celebrate(stars)}catch(e){showErr("celebration: "+e.message)}render();setTimeout(()=>{try{showDone()}catch(e){showErr("result: "+e.message);fallbackDone()}},1900)}
 function winGame(perf){if(runWon)return;if(!sel&&lastSite)sel=lastSite;if(!sel)return;runWon=true;lastSite=sel;try{winGameCore(perf)}catch(e){showErr("win: "+e.message);try{render()}catch(_){}setTimeout(()=>{try{showDone()}catch(_){fallbackDone()}},1200)}}
 function fallbackDone(){$("dh").textContent=L2("Level complete!","اكتمل المستوى!");$("dp").textContent="";$("dnext").textContent="▶ "+L2("Next level","المستوى التالي");$("dre").textContent="↻ "+L2("Retry","إعادة");$("dbtn").textContent=L2("Back to map","العودة للخريطة");$("dnext").style.display=$("dre").style.display="block";$("done").style.display="flex"}
-const VERSION="3.0";
+const VERSION="3.4";
 function showErr(m){let b=document.getElementById("errbar");if(!b){b=document.createElement("div");b.id="errbar";b.style.cssText="position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:50;background:#7a1f1f;color:#fff;font:12px system-ui;padding:8px 10px;border-radius:8px;word-break:break-word";document.body.appendChild(b);b.onclick=()=>{b.style.display="none"}}b.textContent="⚠ "+m+" (v"+VERSION+", tap to hide)";b.style.display="block"}
 addEventListener("error",e=>showErr((e.message||"error")+" @"+(e.lineno||"?")));addEventListener("unhandledrejection",e=>showErr(String(e.reason)));
 const GPOOL=[[166,862,1],[1236,316,1],[350,430,0],[905,520,0],[1136,696,1],[655,760,0],[300,150,0],[650,320,0],[1000,400,0],[900,800,0],[230,600,0],[1200,500,0],[560,610,0],[1262,894,1],[740,260,0]];
@@ -799,7 +857,7 @@ const inEgypt=(lo,la)=>{let c=false;for(let i=0,j=OUT.length-1;i<OUT.length;j=i+
 function updGS(t){if(!gs&&t>gsNext){for(let k=0;k<40;k++){const lo=26+Math.random()*8.5,la=22.5+Math.random()*8.8;if(inEgypt(lo,la)){gs={lo,la,until:t+7000,cursed:Math.random()<.3};break}}gsNext=t+(18000+Math.random()*18000)*(own.has("lucky")?.5:1)}if(gs&&t>gs.until)gs=null}
 function drawGS(t){if(gs){const[x,y]=mp(gs.lo,gs.la),p=1+.2*Math.sin(t/150);ctx.fillStyle=gs.cursed?"rgba(217,83,79,.45)":"rgba(255,224,138,.35)";ctx.beginPath();ctx.arc(x,y,24*p,0,7);ctx.fill();
   ctx.fillStyle=gs.cursed?"#1a1a1a":"#e6b84a";ctx.beginPath();ctx.ellipse(x,y,9,12,0,0,7);ctx.fill();ctx.strokeStyle=gs.cursed?"#d9534f":"#6a4a10";ctx.lineWidth=2;ctx.stroke();ctx.beginPath();ctx.moveTo(x,y-12);ctx.lineTo(x,y+12);ctx.moveTo(x-9,y-2);ctx.lineTo(x+9,y-2);ctx.stroke()}
- gfx=gfx.filter(f=>t-f.t0<800);gfx.forEach(f=>{const k=(t-f.t0)/800;ctx.globalAlpha=1-k;ctx.font="bold 22px system-ui";ctx.textAlign="center";ctx.lineWidth=4;ctx.strokeStyle="#3a2208";ctx.fillStyle=f.bad?"#ff8a80":"#fff4d0";ctx.strokeText(f.txt||"+15",f.x,f.y-k*36);ctx.fillText(f.txt||"+15",f.x,f.y-k*36);ctx.globalAlpha=1})}
+ gfx=gfx.filter(f=>t-f.t0<800);gfx.forEach(f=>{const k=(t-f.t0)/800;ctx.globalAlpha=1-k;ctx.font="bold 22px system-ui";ctx.textAlign="center";ctx.lineWidth=4;ctx.strokeStyle="#3a2208";ctx.fillStyle=f.bad?"#ff8a80":"#fff4d0";ctx.strokeText(f.txt||"+"+Math.round(15*RATE),f.x,f.y-k*36);ctx.fillText(f.txt||"+"+Math.round(15*RATE),f.x,f.y-k*36);ctx.globalAlpha=1})}
 
 /* ---------- FUN: faces, mascot quips ---------- */
 function face(x,y,r,m){ctx.save();ctx.lineCap="round";const ex=r*.38,ey=y-r*.15,er=r*.2,lw=Math.max(1.5,r*.1);ctx.strokeStyle="#3a2208";ctx.lineWidth=lw;
@@ -823,7 +881,7 @@ function quipFor(k){const P={ok:.3,bad:.8,miss:.5,win:1,select:.45}[k];if(!P||Ma
 let AC=null,muted=false;
 function note(f,at,d,ty){const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type=ty||"sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,n+at);g.gain.exponentialRampToValueAtTime(.18,n+at+.01);g.gain.exponentialRampToValueAtTime(.0001,n+at+d);o.connect(g);g.connect(AC.destination);o.start(n+at);o.stop(n+at+d+.02)}
 const SN={ok:[[784,0,.1],[1047,.08,.14]],bad:[[160,0,.22,"sawtooth"]],win:[[523,0,.14],[659,.13,.14],[784,.26,.14],[1047,.39,.3]],fanfare:[[523,0,.12],[659,.1,.12],[784,.2,.12],[1047,.3,.16],[784,.46,.1],[1047,.56,.1],[1319,.68,.45]],tap:[[520,0,.06]],miss:[[220,0,.07,"triangle"]],p0:[[330,0,.28]],p1:[[392,0,.28]],p2:[[494,0,.28]],p3:[[587,0,.28]]};
-function snd(k){quipFor(k);if(curseRun&&mode==="world"&&cur&&!cur.bonus&&(k==="bad"||k==="miss")){const n=loseBal(k==="bad"?5:2);if(n){curseLost+=n;toastTx="💀 −"+n;toastT=performance.now()+1000}}if(muted)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();(SN[k]||[]).forEach(n=>note(n[0],n[1],n[2],n[3]));if(navigator.vibrate)navigator.vibrate(k==="bad"?60:k==="miss"?0:15)}catch(e){}}
+function snd(k){quipFor(k);if(curseRun&&mode==="world"&&cur&&!cur.bonus&&(k==="bad"||k==="miss")){const n=loseBal(Math.max(1,Math.round((k==="bad"?5:2)*RATE)));if(n){curseLost+=n;toastTx="💀 −"+n;toastT=performance.now()+1000}}if(muted)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();(SN[k]||[]).forEach(n=>note(n[0],n[1],n[2],n[3]));if(navigator.vibrate)navigator.vibrate(k==="bad"?60:k==="miss"?0:15)}catch(e){}}
 const updMute=()=>{$("mute").textContent=$("gmute").textContent=muted?"🔇":"🔊"};
 $("mute").onclick=$("gmute").onclick=()=>{muted=!muted;updMute();save()};
 const SAVE="egyptquest.v1";
@@ -842,7 +900,8 @@ abydos:["The Abydos King List in Seti I's temple names dozens of earlier pharaoh
 whitedesert:["The White Desert's mushroom-shaped chalk rocks were carved by wind-blown sand over thousands of years.","نحتت الرياح المحملة بالرمال صخور الصحراء البيضاء الطباشيرية على شكل الفطر عبر آلاف السنين."],
 hitan:["Wadi Al-Hitan became a UNESCO World Heritage Site in 2005 for its fossils of early whales.","أصبح وادي الحيتان موقعًا للتراث العالمي لليونسكو عام 2005 بفضل حفريات الحيتان القديمة."],
 matruh:["Legend says Cleopatra and Mark Antony swam in the clear waters near Marsa Matruh.","تقول الأسطورة إن كليوباترا ومارك أنطونيو سبحا في المياه الصافية قرب مرسى مطروح."],
-kharga:["The Temple of Hibis in Kharga is among the best-preserved temples of the Persian period in Egypt.","يُعد معبد هيبس في الخارجة من أفضل معابد العصر الفارسي المحفوظة في مصر."]};
+kharga:["The Temple of Hibis in Kharga is among the best-preserved temples of the Persian period in Egypt.","يُعد معبد هيبس في الخارجة من أفضل معابد العصر الفارسي المحفوظة في مصر."],
+gouna:["El Gouna Film Festival was founded in 2017, and its awards are called the Stars of El Gouna.","تأسس مهرجان الجونة السينمائي عام 2017، وتُسمّى جوائزه «نجمة الجونة»."]};
 function exportCode(){const pg={};for(const k in prog)pg[k]=[...prog[k]];return btoa(JSON.stringify({v:1,score,done:[...done],seen:[...seen],prog:pg,lvl,ach:[...ach],streak,lastDay,SR,spent,inv,own:[...own],theme,ENDL,loginDay,chestAt}))}
 function openBackup(){const m=$("bmenu");
  m.innerHTML='<div class="box"><h2 style="color:var(--gold);margin:0 0 4px">💾 '+L2("Backup progress","نسخ احتياطي للتقدم")+'</h2><p style="margin:0 0 8px;color:var(--mut);font-size:13px">'+L2("Copy this code to move your progress to another device. To restore, paste a code below and tap Restore.","انسخ هذا الرمز لنقل تقدمك إلى جهاز آخر. للاستعادة الصق الرمز هنا واضغط استعادة.")+'</p>'+
@@ -863,7 +922,7 @@ function openCollection(){const ar=lang==="ar",m=$("bmenu");let n=0;
  $("rst").onclick=()=>{if(!armed){armed=true;$("rst").textContent=L2("Tap again to confirm","اضغط مرة أخرى للتأكيد");return}score=0;done.clear();seen.clear();for(const k in prog)delete prog[k];Object.keys(lvl).forEach(k=>delete lvl[k]);ach.clear();streak=0;lastDay="";dailyClaim="";for(const k in SR)delete SR[k];spent=0;inv.hint=5;inv.time=0;inv.boost=0;inv.freeze=0;inv.ward=0;curseOn=false;own.clear();theme="classic";qDay="";qIds=[];qp={};qcl={};chestAt=0;loginDay=0;for(const k in ENDL)delete ENDL[k];sel=null;m.style.display="none";render()}}
 
 /* ---------- UI ---------- */
-function select(id){snd("tap");quipFor("select");sel=SITES.find(s=>s.id===id);if(!seen.has(id)){seen.add(id);score+=10}render()}
+function select(id){snd("tap");quipFor("select");sel=SITES.find(s=>s.id===id);if(!seen.has(id)){seen.add(id);score+=Math.round(10*RATE)}render()}
 $("x").onclick=()=>{sel=null;render()};
 $("lang").onclick=()=>{lang=lang==="en"?"ar":"en";render()};
 function exitWorld(){mode="map";bonusMode=false;ptr.clear();document.body.classList.remove("g");render()}
@@ -879,7 +938,7 @@ function checkUnlocks(){SITES.forEach((st,i)=>{if(unlocked(i)&&!unSet.has(st.id)
 const chestShort=()=>{const ms=chestAt-Date.now();if(ms<=0)return L2("OPEN","افتح");const m=Math.ceil(ms/60000);return Math.floor(m/60)+"h"+m%60+"m"};
 function render(){checkUnlocks();newQuestDay();checkAch();save();const t=T[lang],ar=lang==="ar";
  document.documentElement.lang=lang;document.documentElement.dir=ar?"rtl":"ltr";
- $("title").textContent=t.title;$("score").textContent=t.score+": "+bal()+(streak>0?"  🔥"+streak:"");{const nx=SITES.findIndex((s,i)=>!unlocked(i));$("hint").textContent=t.hintMap+(nx>=0?"\n🔒 "+L2("Next place at "+need(nx)+" points (you have "+score+")","المكان التالي عند "+need(nx)+" نقطة (لديك "+score+")"):"")}$("lang").textContent=ar?"English":"العربية";
+ $("title").textContent=t.title;$("score").textContent=t.score+": "+bal()+(streak>0?"  🔥"+streak:"");{let nx=-1;SITES.forEach((s,i)=>{if(!unlocked(i)&&(nx<0||need(i)<need(nx)))nx=i});$("hint").textContent=t.hintMap+(nx>=0?"\n🔒 "+L2("Next place at "+need(nx)+" points (you have "+score+")","المكان التالي عند "+need(nx)+" نقطة (لديك "+score+")"):"")}$("lang").textContent=ar?"English":"العربية";
  const idx=sel?SITES.indexOf(sel):0,lk=!!sel&&!unlocked(idx);
  $("enter").textContent=lk?t.locked.replace("#",need(idx)).replace("%",score):t.enter;$("enter").disabled=lk;
  const cs=mode==="world"&&cur&&cur.bonus?cur.bonus[ar?1:0]:mode==="world"&&sel?(ar?sel.ar:sel.en):"";$("gtitle").textContent=cs+(cur&&cur.bonus?"":" · "+L2("Lv ","م ")+curLevel+(curseRun?" ☠":""))+" · "+t.score+": "+bal();$("gback").textContent=t.back;
@@ -893,7 +952,7 @@ $("lside").innerHTML="";$("rside").innerHTML="";
  if(eventMult()>1)sb("lside","🎉","×2",null,"done")}
 sb("rside","🎮",L2("Bonus","إضافي"),openBonus);sb("rside","📜",L2("Book","السجل"),openCollection);sb("rside","🛒",L2("Shop","المتجر"),openShop);
 
- const inf=$("info");if(sel){inf.style.display="block";$("iname").textContent=ar?sel.ar:sel.en;$("iera").textContent=ar?sel.eraAr:sel.eraEn;$("idesc").textContent=(ar?sel.dAr:sel.dEn)+"\n🎮 "+CH[sel.id][ar?1:0]+"\n★ "+starSum(sel.id)+"/15"+(lk?"\n🔒 "+L2("Locked: earn "+(need(idx)-score)+" more total points","مقفل: اربح "+(need(idx)-score)+" نقطة إجمالية إضافية"):"")}else inf.style.display="none"}
+ const inf=$("info");if(sel&&mode==="map"){inf.style.display="block";$("iname").textContent=ar?sel.ar:sel.en;$("iera").textContent=ar?sel.eraAr:sel.eraEn;$("idesc").textContent=(ar?sel.dAr:sel.dEn)+"\n🎮 "+CH[sel.id][ar?1:0]+"\n★ "+starSum(sel.id)+"/15"+(lk?"\n🔒 "+L2("Locked: earn "+(need(idx)-score)+" more total points","مقفل: اربح "+(need(idx)-score)+" نقطة إجمالية إضافية"):"")}else inf.style.display="none"}
 load();touchDay();newQuestDay();render();if(loginPending)openLogin();scheduleReminders();
 document.addEventListener&&document.addEventListener("visibilitychange",()=>{if(!document.hidden){touchDay();newQuestDay();render();if(loginPending)openLogin()}});
 (function loop(){const t=performance.now();requestAnimationFrame(loop);
