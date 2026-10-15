@@ -1,0 +1,1 @@
+const BONUS={rush:{bonus:["Scarab Rush","ركض الجعارين"],game:GAMES.rush,w:1,h:1},quiz:{bonus:["Pharaoh Quiz","مسابقة الفراعنة"],game:GAMES.quiz,w:1,h:1},catch:{bonus:["Treasure Catch","صيد الكنوز"],game:GAMES.catch,w:1,h:1}};
