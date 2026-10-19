@@ -67,7 +67,7 @@ definePlace({
   const kinds=x<1?["photo","film"]:x<2?["photo","film","year"]:["photo","film","year","dir"];
   const types=x<1?["film","actor"]:x<2?["film","actor","scene"]:["film","actor","scene","punch"];
   const local=LOCAL.filter(q=>types.includes(q.lt)).map(q=>{if(q.opts.length>nopt){const a=q.opts[q.ans],w=QGen.shuf(q.opts.filter((_,i)=>i!==q.ans)).slice(0,nopt-1),o=QGen.shuf([a,...w]);return{...q,opts:o,ans:o.indexOf(a)}}return q});
-  V.load(QGen.cinema(nq,nopt,kinds,local))},
+  V.load(QGen.cinema(nq,nopt,kinds,local,x))},
  status(){return V.loading?L2("Loading…","جاري التحميل…"):L2("Question ","السؤال ")+Math.min(V.index+1,V.count||nq)+"/"+(V.count||nq)+" · "+L2("Mistakes ","الأخطاء ")+V.errs},
  draw:t=>V.draw(t),tap:(x,y)=>V.tap(x,y)}})()
 });

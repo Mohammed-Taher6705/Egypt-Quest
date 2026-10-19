@@ -30,19 +30,19 @@ const QGen=(()=>{
 
  /* ---------- Wikidata with cache ---------- */
  const Q={
-  actors:`SELECT ?p ?ar ?en (SAMPLE(?im) AS ?img) WHERE{?p wdt:P106 wd:Q33999;wdt:P27 wd:Q79;wdt:P18 ?im;wikibase:sitelinks ?sl. FILTER(?sl>5) ?p rdfs:label ?ar FILTER(lang(?ar)="ar") ?p rdfs:label ?en FILTER(lang(?en)="en")}GROUP BY ?p ?ar ?en`,
-  films:`SELECT ?f ?far ?fen (MIN(YEAR(?d)) AS ?y) (COUNT(DISTINCT ?di) AS ?nd) (SAMPLE(?dar) AS ?dAr) (SAMPLE(?den) AS ?dEn) (GROUP_CONCAT(DISTINCT STRAFTER(STR(?c),"entity/");separator="|") AS ?cast) WHERE{?f wdt:P31 wd:Q11424;wdt:P495 wd:Q79;wdt:P577 ?d. ?f rdfs:label ?far FILTER(lang(?far)="ar") OPTIONAL{?f rdfs:label ?fen FILTER(lang(?fen)="en")} OPTIONAL{?f wdt:P57 ?di. ?di rdfs:label ?dar FILTER(lang(?dar)="ar") OPTIONAL{?di rdfs:label ?den FILTER(lang(?den)="en")}} OPTIONAL{?f wdt:P161 ?c}}GROUP BY ?f ?far ?fen`,
-  pharaohs:`SELECT ?p ?ar ?en (SAMPLE(?im) AS ?img) WHERE{?p wdt:P39 wd:Q37110;wdt:P18 ?im. ?p rdfs:label ?ar FILTER(lang(?ar)="ar") ?p rdfs:label ?en FILTER(lang(?en)="en")}GROUP BY ?p ?ar ?en`,
+  actors:`SELECT ?p ?ar ?en (SAMPLE(?im) AS ?img) (SAMPLE(?sx) AS ?sex) (MAX(?sl) AS ?pop) WHERE{?p wdt:P106 wd:Q33999;wdt:P27 wd:Q79;wdt:P18 ?im;wikibase:sitelinks ?sl. FILTER(?sl>5) OPTIONAL{?p wdt:P21 ?sx} ?p rdfs:label ?ar FILTER(lang(?ar)="ar") ?p rdfs:label ?en FILTER(lang(?en)="en")}GROUP BY ?p ?ar ?en`,
+  films:`SELECT ?f ?far ?fen (MIN(YEAR(?d)) AS ?y) (COUNT(DISTINCT ?di) AS ?nd) (SAMPLE(?dar) AS ?dAr) (SAMPLE(?den) AS ?dEn) (GROUP_CONCAT(DISTINCT STRAFTER(STR(?c),"entity/");separator="|") AS ?cast) (MAX(?fs) AS ?pop) WHERE{?f wdt:P31 wd:Q11424;wdt:P495 wd:Q79;wdt:P577 ?d;wikibase:sitelinks ?fs. ?f rdfs:label ?far FILTER(lang(?far)="ar") OPTIONAL{?f rdfs:label ?fen FILTER(lang(?fen)="en")} OPTIONAL{?f wdt:P57 ?di. ?di rdfs:label ?dar FILTER(lang(?dar)="ar") OPTIONAL{?di rdfs:label ?den FILTER(lang(?den)="en")}} OPTIONAL{?f wdt:P161 ?c}}GROUP BY ?f ?far ?fen`,
+  pharaohs:`SELECT ?p ?ar ?en (SAMPLE(?im) AS ?img) (MAX(?sl) AS ?pop) WHERE{?p wdt:P39 wd:Q37110;wdt:P18 ?im;wikibase:sitelinks ?sl. ?p rdfs:label ?ar FILTER(lang(?ar)="ar") ?p rdfs:label ?en FILTER(lang(?en)="en")}GROUP BY ?p ?ar ?en`,
   govs:`SELECT ?g ?ar ?en ?car ?cen WHERE{?g wdt:P31 wd:Q204910;wdt:P36 ?c. ?g rdfs:label ?ar FILTER(lang(?ar)="ar") ?g rdfs:label ?en FILTER(lang(?en)="en") ?c rdfs:label ?car FILTER(lang(?car)="ar") ?c rdfs:label ?cen FILTER(lang(?cen)="en")}`,
-  sites:`SELECT ?s (SAMPLE(?ar) AS ?sar)(SAMPLE(?en) AS ?sen)(SAMPLE(?gar) AS ?gAr)(SAMPLE(?gen) AS ?gEn)(SAMPLE(?img) AS ?im) WHERE{?s wdt:P31/wdt:P279? wd:Q839954;wdt:P17 wd:Q79;wdt:P18 ?img;wdt:P131+ ?g. ?g wdt:P31 wd:Q204910. ?s rdfs:label ?ar FILTER(lang(?ar)="ar") ?s rdfs:label ?en FILTER(lang(?en)="en") ?g rdfs:label ?gar FILTER(lang(?gar)="ar") ?g rdfs:label ?gen FILTER(lang(?gen)="en")}GROUP BY ?s`
+  sites:`SELECT ?s (SAMPLE(?ar) AS ?sar)(SAMPLE(?en) AS ?sen)(SAMPLE(?gar) AS ?gAr)(SAMPLE(?gen) AS ?gEn)(SAMPLE(?img) AS ?im) (MAX(?sl) AS ?pop) WHERE{?s wdt:P31/wdt:P279? wd:Q839954;wdt:P17 wd:Q79;wdt:P18 ?img;wikibase:sitelinks ?sl;wdt:P131+ ?g. ?g wdt:P31 wd:Q204910. ?s rdfs:label ?ar FILTER(lang(?ar)="ar") ?s rdfs:label ?en FILTER(lang(?en)="en") ?g rdfs:label ?gar FILTER(lang(?gar)="ar") ?g rdfs:label ?gen FILTER(lang(?gen)="en")}GROUP BY ?s`
  };
  const mem={},inflight={};
  function rows(name,force){
   if(mem[name])return Promise.resolve(mem[name]);
-  const c=ls.get("wd."+name);if(c&&c.rows&&!force&&Date.now()-c.t<TTL){mem[name]=c.rows;return Promise.resolve(c.rows)}
+  const c=ls.get("wd2."+name);if(c&&c.rows&&!force&&Date.now()-c.t<TTL){mem[name]=c.rows;return Promise.resolve(c.rows)}
   if(inflight[name])return inflight[name];
   inflight[name]=withTimeout(fetch(WD+encodeURIComponent(Q[name]),{headers:{Accept:"application/sparql-results+json"}}).then(r=>{if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}),30000)
-   .then(j=>{const out=j.results.bindings.map(b=>{const o={};for(const k in b)o[k]=b[k].value;return o});mem[name]=out;ls.set("wd."+name,{t:Date.now(),rows:out});return out})
+   .then(j=>{const out=j.results.bindings.map(b=>{const o={};for(const k in b)o[k]=b[k].value;return o});mem[name]=out;ls.set("wd2."+name,{t:Date.now(),rows:out});return out})
    .catch(e=>{if(c&&c.rows){mem[name]=c.rows;return c.rows}throw e})            // stale cache beats nothing
    .finally(()=>{delete inflight[name]});
   return inflight[name]}
@@ -55,19 +55,23 @@ const QGen=(()=>{
   for(const x of shuf(wrongPool.slice())){const t=x[1]+"|"+x[0];if(seenT.has(t)||x[0]===ans[0]||x[1]===ans[1])continue;seenT.add(t);w.push(x);if(w.length>=n-1)break}
   if(w.length<n-1)return null;const opts=shuf([ans,...w]);return{key,cat,q,opts,ans:opts.indexOf(ans),img:im||null}}
  const nm=(en,ar)=>[en||ar,ar||en];
+ /* most-known first: easy levels only use the top of each list */
+ const top=(list,n)=>list.slice().sort((a,b)=>(+b.pop||0)-(+a.pop||0)).slice(0,n);
+ const FEM="http://www.wikidata.org/entity/Q6581072";
 
  /* ---------- cinema generators (El Gouna) ---------- */
  const CAT={photo:["🎬 Who is this?","🎬 مين ده؟"],film:["🎬 Which film?","🎬 أنهي فيلم؟"],dir:["🎬 Director","🎬 المخرج"],year:["🎬 Release year","🎬 سنة العرض"],
   phar:["👑 Pharaohs","👑 الفراعنة"],site:["🏛 Monuments","🏛 الآثار"],gov:["🗺 Governorates","🗺 المحافظات"],trivia:["📚 Trivia","📚 معلومات عامة"]};
- function cinemaGen(actors,films,n){
-  const byId={};actors.forEach(a=>byId[qid(a.p)]=a);
+ function cinemaGen(actorsAll,filmsAll,n,lv){lv=lv||0;const actors=top(actorsAll,lv<1?50:lv<3?110:400),films=top(filmsAll,lv<1?250:lv<3?700:4000);
+  const byId={};actors.forEach(a=>byId[qid(a.p)]=a);const allIds=new Set(actorsAll.map(a=>qid(a.p)));
   const fl=films.filter(f=>f.far).map(f=>({...f,id:qid(f.f),cs:(f.cast||"").split("|").filter(Boolean)}));
   const titles=fl.map(f=>nm(f.fen,f.far));
   const gens={
-   photo:()=>{const a=pick(freshOf(actors,x=>"ap:"+qid(x.p),"ap:"));if(!a)return null;return mc("ap:"+qid(a.p),CAT.photo,["Who is this actor?","مين الممثل ده؟"],nm(a.en,a.ar),actors.map(x=>nm(x.en,x.ar)),n,img(a.img))},
+   photo:()=>{const a=pick(freshOf(actors,x=>"ap:"+qid(x.p),"ap:"));if(!a)return null;const same=actorsAll.filter(x=>(x.sex===FEM)===(a.sex===FEM));
+    return mc("ap:"+qid(a.p),CAT.photo,["Who is this star?","مين في الصورة دي؟"],nm(a.en,a.ar),same.map(x=>nm(x.en,x.ar)),n,img(a.img))},
    film:()=>{const cand=fl.filter(f=>f.cs.some(c=>byId[c]));const f=pick(freshOf(cand,x=>"sf:"+x.id,"sf:"));if(!f)return null;const star=byId[pick(f.cs.filter(c=>byId[c]))];
     const wrong=fl.filter(x=>x.id!==f.id&&!x.cs.includes(qid(star.p))).map(x=>nm(x.fen,x.far));
-    return mc("sf:"+f.id,CAT.film,[`This star (${star.en}) appears in which film?`,`النجم ده (${star.ar}) مثّل في أنهي فيلم؟`],nm(f.fen,f.far),wrong,n,img(star.img))},
+    const fem=star.sex===FEM;return mc("sf:"+f.id,CAT.film,[`Which film did ${star.en} appear in?`,fem?`${star.ar} شاركت في أنهي فيلم؟`:`${star.ar} شارك في أنهي فيلم؟`],nm(f.fen,f.far),wrong,n,img(star.img))},
    dir:()=>{const cand=fl.filter(f=>+f.nd===1&&f.dAr);const f=pick(freshOf(cand,x=>"fd:"+x.id,"fd:"));if(!f)return null;
     return mc("fd:"+f.id,CAT.dir,[`Who directed the film "${f.fen||f.far}"?`,`مين مخرج فيلم "${f.far}"؟`],nm(f.dEn,f.dAr),cand.map(x=>nm(x.dEn,x.dAr)),n)},
    year:()=>{const cand=fl.filter(f=>+f.y>1920);const f=pick(freshOf(cand,x=>"fy:"+x.id,"fy:"));if(!f)return null;const y=+f.y,ys=new Set();while(ys.size<6){const d=(Math.floor(Math.random()*12)+2)*(Math.random()<.5?-1:1);if(y+d<=new Date().getFullYear())ys.add(y+d)}
@@ -75,7 +79,7 @@ const QGen=(()=>{
   return gens}
 
  /* ---------- Egypt general-knowledge generators (bonus quiz) ---------- */
- function egyptGen(phar,sites,govs,n){
+ function egyptGen(pharAll,sitesAll,govs,n){const phar=top(pharAll,70),sites=top(sitesAll,120);
   const gl=govs.filter(g=>!g.en.toLowerCase().includes(g.cen.toLowerCase())&&!g.ar.includes(g.car));
   return{
    phar:()=>{const p=pick(freshOf(phar,x=>"ph:"+qid(x.p),"ph:"));if(!p)return null;return mc("ph:"+qid(p.p),CAT.phar,["Which ruler of Egypt is shown here?","أي حاكم لمصر يظهر هنا؟"],nm(p.en,p.ar),phar.map(x=>nm(x.en,x.ar)),n,img(p.img))},
@@ -105,16 +109,16 @@ const QGen=(()=>{
 
  return{warm,markSeen,isSeen,shuf,
   /* El Gouna: n questions, kinds by level, `local` = fallback questions from the built-in bank */
-  async cinema(count,opts,kinds,local){try{
-   if(navigator.onLine===false&&!mem.films&&!ls.get("wd.films"))throw 0;const[actors,films]=await withTimeout(Promise.all([safe("actors"),safe("films")]),8000);
-   const gens=cinemaGen(actors,films,opts);
+  async cinema(count,opts,kinds,local,lv){try{
+   if(navigator.onLine===false&&!mem.films&&!ls.get("wd2.films"))throw 0;const[actors,films]=await withTimeout(Promise.all([safe("actors"),safe("films")]),8000);
+   const gens=cinemaGen(actors,films,opts,lv);
    const live=draw(gens,shuf(kinds.slice()),Math.ceil(count*1.6));
    const mix=shuf([...live,...shuf(local.filter(q=>!isSeen(q.key))).slice(0,Math.max(1,Math.round(count*.3)))]);
    const fin=await finalize(mix,count);if(fin.length>=count)return fin;
    return fin.concat(shuf(local.filter(q=>!fin.some(f=>f.key===q.key)))).slice(0,count)}catch(e){return shuf(local.filter(q=>!isSeen(q.key))).concat(shuf(local)).slice(0,count)}},
   /* Bonus quiz */
   async egypt(count,opts,local){try{
-   if(navigator.onLine===false&&!mem.sites&&!ls.get("wd.sites"))throw 0;const[phar,sites,govs]=await withTimeout(Promise.all([safe("pharaohs"),safe("sites"),safe("govs")]),8000);
+   if(navigator.onLine===false&&!mem.sites&&!ls.get("wd2.sites"))throw 0;const[phar,sites,govs]=await withTimeout(Promise.all([safe("pharaohs"),safe("sites"),safe("govs")]),8000);
    const gens=egyptGen(phar,sites,govs,opts);
    let live=draw(gens,shuf(["phar","site","gov","site","phar"]),Math.ceil(count*1.6));
    if(lang==="en"){try{live=live.concat(await withTimeout(otdb(Math.max(2,Math.round(count*.4))),6000))}catch(e){}}
