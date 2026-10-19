@@ -1,0 +1,21 @@
+const CELEB_TXT=[["PHARAOH-NOMENAL!","فرعوني جدًا!"],["SPHINX-TACULAR!","رائع زي أبو الهول!"],["MUMMY MIA, YOU DID IT!","يا مومياء، نجحت!"],["NILE-LY PERFECT!","ممتاز زي النيل!"],["BOW TO THE PHARAOH!","انحنوا للفرعون!"]];
+let celeb=null;
+function celebrate(stars){const a=CELEB_TXT[Math.floor(Math.random()*CELEB_TXT.length)];celeb={t0:performance.now(),stars,txt:lang==="ar"?a[1]:a[0]};confetti();setTimeout(confetti,250);setTimeout(confetti,500);snd("fanfare")}
+function drawCeleb(t){if(!celeb)return;const k=(t-celeb.t0)/1800;if(k>1){celeb=null;return}
+ const a=Math.max(0,Math.min(1,k*8,(1-k)*5));ctx.save();ctx.globalAlpha=a*.5;ctx.fillStyle="#0a0e1e";ctx.fillRect(0,0,W,H);ctx.globalAlpha=a;
+ const cx=W/2,cy=H*.38,r=Math.min(W,H)*.13,b=Math.abs(Math.sin(t/150))*r*.5;ctx.translate(cx,cy-b);
+ ctx.strokeStyle="#6a4a10";ctx.lineWidth=r*.12;ctx.lineCap="round";const w=Math.sin(t/110)*.5;
+ [-1,1].forEach(d=>{ctx.beginPath();ctx.moveTo(d*r*.8,-r*.1);ctx.lineTo(d*r*1.5,-r*(.9+w*d));ctx.stroke()});
+ [-1,1].forEach(d=>{ctx.beginPath();ctx.moveTo(d*r*.4,r);ctx.lineTo(d*r*.7,r*1.5);ctx.stroke()});
+ ctx.fillStyle="#e6b84a";ctx.beginPath();ctx.ellipse(0,0,r*.95,r*1.15,0,0,7);ctx.fill();ctx.lineWidth=4;ctx.stroke();
+ ctx.fillStyle="#2f6fd8";ctx.beginPath();ctx.moveTo(-r*.7,-r*.85);ctx.lineTo(r*.7,-r*.85);ctx.lineTo(0,-r*1.7);ctx.closePath();ctx.fill();
+ face(0,-r*.1,r*.85,1);ctx.save();ctx.scale(r/20,r/20);sunFace(0,-3,1);ctx.restore();ctx.restore();
+ const sc=1+.08*Math.sin(t/120),fs=Math.round(Math.min(W/10,34)*sc);ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,a*1.5));ctx.textAlign="center";ctx.font="bold "+fs+"px system-ui";ctx.lineWidth=6;ctx.strokeStyle="#3a2208";ctx.fillStyle="#fff4d0";
+ ctx.strokeText(celeb.txt,W/2,cy+r*2.6);ctx.fillText(celeb.txt,W/2,cy+r*2.6);ctx.font=Math.round(fs*1.3)+"px system-ui";const st="★".repeat(celeb.stars)+"☆".repeat(3-celeb.stars);ctx.fillStyle="#ffd54a";ctx.strokeText(st,W/2,cy+r*2.6+fs*1.6);ctx.fillText(st,W/2,cy+r*2.6+fs*1.6);ctx.restore()}
+function showErr(m){let b=document.getElementById("errbar");if(!b){b=document.createElement("div");b.id="errbar";b.style.cssText="position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top,0px));z-index:50;background:#7a1f1f;color:#fff;font:12px system-ui;padding:8px 10px;border-radius:8px;word-break:break-word";document.body.appendChild(b);b.onclick=()=>{b.style.display="none"}}b.textContent="⚠ "+m+" (v"+VERSION+", tap to hide)";b.style.display="block"}
+addEventListener("error",e=>showErr((e.message||"error")+" @"+(e.lineno||"?")));addEventListener("unhandledrejection",e=>showErr(String(e.reason)));
+let conf=[];
+function confetti(){for(let i=0;i<70;i++)conf.push({x:W/2,y:H*.4,vx:(Math.random()-.5)*600,vy:-Math.random()*500-100,c:["#e6b84a","#2fb3a8","#d9534f","#4a8ee0","#f3ead2"][i%5],t0:performance.now(),r:Math.random()*6.28})}
+function drawFx(t){if(mode==="map"){ctx.font="10px system-ui";ctx.textAlign="right";ctx.fillStyle="rgba(255,255,255,.5)";ctx.fillText("v"+VERSION,W-8,H-adH-70)}conf=conf.filter(c=>t-c.t0<1800);conf.forEach(c=>{const s=(t-c.t0)/1000;ctx.save();ctx.globalAlpha=Math.max(0,1-s/1.8);ctx.translate(c.x+c.vx*s,c.y+c.vy*s+900*s*s);ctx.rotate(c.r+s*6);ctx.fillStyle=c.c;ctx.fillRect(-4,-2,8,4);ctx.restore()});
+ if(t<toastT){ctx.font="bold 15px system-ui";const w=ctx.measureText(toastTx).width+28,x=(W-w)/2,ty=mode==="world"?H-150:100;ctx.fillStyle="rgba(20,26,40,.95)";rr(x,ty,w,36,18);ctx.fill();ctx.strokeStyle="#e6b84a";ctx.lineWidth=2;ctx.stroke();ctx.fillStyle="#fff4d0";ctx.textAlign="center";ctx.fillText(toastTx,W/2,ty+23)}
+ if(t<qT){ctx.font="bold 15px system-ui";const w=ctx.measureText(qTx).width+64,x=(W-w)/2,y=mode==="world"?H-100:146;ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,(qT-t)/300));ctx.fillStyle="#fff7dd";rr(x,y,w,40,20);ctx.fill();ctx.strokeStyle="#e6b84a";ctx.lineWidth=2;ctx.stroke();ctx.fillStyle="#e6b84a";ctx.beginPath();ctx.arc(x+22,y+20,14,0,7);ctx.fill();ctx.strokeStyle="#6a4a10";ctx.stroke();face(x+22,y+22,11,1);ctx.fillStyle="#3a2208";ctx.textAlign="left";ctx.fillText(qTx,x+44,y+25);ctx.restore()}}

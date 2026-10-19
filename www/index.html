@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Egypt Quest</title>
+<meta name="description" content="Explore Egypt's wonders on an interactive map and beat a different mini-game at every site.">
+<meta name="theme-color" content="#0e1420">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<!-- ===== UI shell (map HUD, in-game HUD, dialogs) ===== -->
+<canvas id="c"></canvas>
+<div class="hud"><h1 id="title"></h1><div style="display:flex;gap:8px"><span class="pill" id="score"></span><button class="pill" id="mute">🔊</button><button id="lang">العربية</button></div></div>
+<div id="hint"></div>
+<div id="info"><button id="x">×</button><h2 id="iname"></h2><div class="era" id="iera"></div><p id="idesc"></p><button id="enter"></button><a id="itix" href="#" role="button"></a></div>
+<div id="lside"></div><div id="rside"></div>
+<div id="gui"><span class="pill" id="gtitle"></span><span style="display:flex;gap:8px"><button class="pill" id="ginfo">ℹ️</button><button class="pill" id="gmute">🔊</button><button class="pill" id="gback"></button></span></div>
+<div id="ghint"><div id="gline"></div><span id="tray"></span></div><div id="gside"><button id="hintbtn" class="sbtn"></button></div>
+<div id="bmenu"></div>
+<div id="done"><div class="box"><h2 id="dh" style="color:var(--gold);margin:0 0 6px"></h2><p id="dp" style="margin:0 0 12px"></p><button id="dad" class="bbtn ad" style="text-align:center;display:none"></button><button id="dnext" class="bbtn" style="text-align:center"></button><button id="dre" class="bbtn" style="text-align:center"></button><button id="dbtn"></button></div></div>
+<div id="adbanner"></div>
+<div id="adov"></div>
+<noscript>Egypt Quest needs JavaScript.</noscript>
+
+<!-- ===== Engine ===== -->
+<script src="js/config.js"></script>
+<script src="js/core/i18n.js"></script>
+<script src="js/core/registry.js"></script>
+<script src="js/core/state.js"></script>
+<script src="js/core/canvas.js"></script>
+<script src="js/core/scenes.js"></script>
+<script src="js/core/audio.js"></script>
+<script src="js/core/save.js"></script>
+<script src="js/map.js"></script>
+<script src="js/world.js"></script>
+<script src="js/core/fx.js"></script>
+<script src="js/core/retention.js"></script>
+<script src="js/core/shop.js"></script>
+<script src="js/core/progress.js"></script>
+<script src="js/core/bonus.js"></script>
+<script src="js/core/ui.js"></script>
+<script src="js/core/input.js"></script>
+<script src="js/ads.js"></script>
+<script src="js/app.js"></script>
+
+<!-- ===== Places: one file per place (order on the map is SITE_ORDER in js/config.js) ===== -->
+<script src="games/grand-egyptian-museum.js"></script>
+<script src="games/giza-pyramids.js"></script>
+<script src="games/alexandria-qaitbay.js"></script>
+<script src="games/luxor-karnak.js"></script>
+<script src="games/aswan-philae.js"></script>
+<script src="games/abu-simbel.js"></script>
+<script src="games/siwa-oasis.js"></script>
+<script src="games/edfu-temple.js"></script>
+<script src="games/saint-catherine-sinai.js"></script>
+<script src="games/red-sea-hurghada.js"></script>
+<script src="games/abydos.js"></script>
+<script src="games/white-desert.js"></script>
+<script src="games/wadi-al-hitan.js"></script>
+<script src="games/marsa-matruh.js"></script>
+<script src="games/kharga-oasis.js"></script>
+<script src="games/el-gouna.js"></script>
+
+<!-- ===== Bonus games ===== -->
+<script src="games/bonus/scarab-rush.js"></script>
+<script src="games/bonus/pharaoh-quiz.js"></script>
+<script src="games/bonus/treasure-catch.js"></script>
+
+<!-- ===== Boot ===== -->
+<script src="js/main.js"></script>
+</body>
+</html>

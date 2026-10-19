@@ -1,0 +1,24 @@
+{
+  "appId": "com.amsolutions.egyptquest",
+  "appName": "Egypt Quest",
+  "webDir": "www",
+  "backgroundColor": "#0e1420",
+  "android": {
+    "backgroundColor": "#0e1420",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SystemBars": {
+      "insetsHandling": "native",
+      "style": "DARK"
+    },
+    "SplashScreen": {
+      "launchAutoHide": false,
+      "backgroundColor": "#0e1420",
+      "showSpinner": false
+    },
+    "LocalNotifications": {
+      "iconColor": "#e6b84a"
+    }
+  }
+}
