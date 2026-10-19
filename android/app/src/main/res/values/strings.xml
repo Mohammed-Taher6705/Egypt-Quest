@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Egypt Quest</string>
+    <string name="title_activity_main">Egypt Quest</string>
+    <string name="package_name">com.amsolutions.egyptquest</string>
+    <string name="custom_url_scheme">com.amsolutions.egyptquest</string>
+</resources>

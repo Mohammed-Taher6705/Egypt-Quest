@@ -1,0 +1,127 @@
+# Egypt Quest
+
+A map adventure across Egypt — every place on the map opens a different mini-game.
+Runs as a **web app (PWA)** and as an **Android app** (Capacitor), from the same code in `www/`.
+
+## Project layout
+
+```
+www/                         ← the whole web app (also Capacitor's webDir)
+  index.html                 ← entry point (script order matters, see below)
+  css/style.css
+  js/
+    config.js                ← VERSION, place order, ADS settings  ← edit here
+    map.js                   ← the Egypt map: outline, Nile, markers, golden scarabs
+    world.js                 ← hidden-object world engine (used by Giza)
+    ads.js                   ← ad layer: AdMob (Android) / H5 Games Ads (web) / test mock
+    app.js                   ← Android back button, splash, service worker, external links
+    main.js                  ← boot + render loop (loaded last)
+    core/
+      registry.js            ← definePlace() / defineBonus() → builds SITES, WORLDS, GAMES…
+      state.js  i18n.js  canvas.js  audio.js  save.js  fx.js
+      progress.js            ← levels, stars, intro, win/result dialog
+      retention.js           ← daily login, quests, chest, achievements, reminders
+      shop.js  bonus.js  ui.js  input.js  scenes.js
+  games/                     ← ONE FILE PER PLACE (map pin + info + game)
+    grand-egyptian-museum.js  giza-pyramids.js  alexandria-qaitbay.js  luxor-karnak.js
+    aswan-philae.js  abu-simbel.js  siwa-oasis.js  edfu-temple.js  saint-catherine-sinai.js
+    red-sea-hurghada.js  abydos.js  white-desert.js  wadi-al-hitan.js  marsa-matruh.js
+    kharga-oasis.js  el-gouna.js
+    bonus/  scarab-rush.js  pharaoh-quiz.js  treasure-catch.js
+  assets/images/  assets/icons/
+  manifest.webmanifest  sw.js
+android/                     ← generated Capacitor Android project (committed)
+resources/                   ← source art for Android icons/splash
+capacitor.config.json  package.json
+```
+
+All scripts are plain `<script>` tags sharing one global scope (no bundler).
+Order in `index.html`: `config → core → map/world → ads/app → games → bonus → main`.
+
+### Adding a new place
+
+1. Create `www/games/my-place.js`:
+   ```js
+   definePlace({
+     id:"myplace", lon:31.2, lat:30.0,
+     en:"My Place", ar:"…", eraEn:"…", eraAr:"…", dEn:"…", dAr:"…",
+     logo:"assets/images/myplace.jpg",        // optional, else icon(ctx) is drawn
+     challenge:["My challenge","…"], par:45, starTip:["…","…"],
+     levels:(x,k)=>L2((5+x)+" items",(5+x)+" عناصر"),  // text in the level list
+     fact:["…","…"],
+     icon(ctx){ /* draw a ~20px glyph centred on 0,0 */ },
+     game:(()=>({ help:{en:"…",ar:"…"}, start(){}, status(){return""}, draw(t){}, tap(x,y){ /* winGame(1..3) */ } }))()
+   });
+   ```
+2. Add `<script src="games/my-place.js"></script>` in `index.html`.
+3. Add `"myplace"` to `SITE_ORDER` in `js/config.js` (position = unlock order).
+
+Use `later(fn, ms)` instead of `setTimeout` inside games — it is cancelled automatically when the run ends.
+
+## Run locally
+
+```bash
+npm start            # serves www/ on http://localhost:8080
+```
+Deep links: `index.html?game=giza`, `index.html?bonus=quiz` (locked places only get selected).
+
+## Ads
+
+Configured in `www/js/config.js → ADS`. Placement rules (policy-friendly):
+
+| Type | Where | Rule |
+|---|---|---|
+| Banner | Map screen only | hidden during any game |
+| Interstitial | When leaving a result dialog | every 3 finishes, ≥120 s apart, none in first 180 s |
+| Rewarded | "Double points" on result, "+3 hints" when out / in shop, "Open chest now" | always opt-in |
+
+Timers are compensated during rewarded ads, audio pauses during ads.
+
+**Android (AdMob)** — `@capacitor-community/admob`
+1. Create the app + 3 ad units (banner, interstitial, rewarded) in AdMob.
+2. Put the ids in `ADS.native` and the **app id** in `android/app/src/main/AndroidManifest.xml` (`com.google.android.gms.ads.APPLICATION_ID` — currently Google's test id).
+3. Set `ADS.test=false` for release. Consent (UMP/GDPR) is requested automatically on start; create the consent message in AdMob → Privacy & messaging.
+4. Add `app-ads.txt` to your website.
+
+**Web (Google H5 Games Ads / AdSense)**
+1. Apply for AdSense with H5 games ads; set `ADS.web.client = "ca-pub-…"` (and optionally `bannerSlot`).
+2. With `test:true` the H5 test mode is used. With no `client` set and `test:true`, a local **mock** ad is shown so you can check layouts.
+
+If you target kids, set `ADS.childDirected=true` (Google Families policy).
+
+## Web deploy
+
+Upload the `www/` folder to any static host over HTTPS (Netlify, Vercel, Firebase Hosting, GitHub Pages via Actions).
+The service worker makes it installable and playable offline. Bump `CACHE` in `www/sw.js` on each release.
+
+## Android build
+
+Requires Android Studio (JDK 21, SDK 36).
+```bash
+npm install
+npm run android:sync     # copies www/ into the app and updates plugins
+npm run android:open     # open in Android Studio → Run / Build → Generate Signed Bundle
+```
+App id: `com.amsolutions.egyptquest` (change in `capacitor.config.json` before the first Play upload).
+Regenerate icons after editing `resources/`: `npx @capacitor/assets generate --android --assetPath resources`.
+
+## Changelog — v4.0
+
+**Structure**: monolithic engine split into modules; one self-registering file per place; bonus games in `games/bonus/`;
+entry renamed to `index.html`; images renamed to clean slugs and resized (737 KB → ~230 KB); removed iframe wrapper pages
+(use `?game=` deep links); removed unused world layouts for Alexandria/Luxor/Philae/Abu Simbel (those sites use mini-games).
+
+**Fixes**
+- Duplicate code left by the previous split (shared helpers were buried in random game files).
+- In-game title pill wrapped to two lines and covered each game's header; now one line (level & points first).
+- Mascot quips/toasts covered game content (e.g. El Gouna questions) — moved to the bottom while playing.
+- El Gouna question category hidden under the status pill — layout moved down.
+- GEM: title under the HUD and subtitle hidden by a dark band; "Book tickets" link never appeared (CSS hid it) — now a button in the GEM info card; board could deadlock when the computer filled the last cell; stale AI move could land in a new game; lose effect relied on matching status text.
+- Delayed callbacks (El Gouna, Red Sea, Pharaoh Quiz…) could award a win after leaving the game or into another game — new run-scoped `later()`.
+- `?game=` deep links skipped the unlock requirement.
+- Map logos: broken images drew an empty marker (now falls back to the icon).
+- Daily-login reward popup was lost if another dialog replaced it — re-shown when returning to the map.
+- Save on app background / page hide; audio suspended in background.
+
+**Improvements**: GEM AI scales with level (blocks/wins from level 2, smarter from level 3); Android back button
+(closes dialogs → leaves game → minimizes); Escape key on desktop; PWA manifest + offline service worker; app icons & splash.
