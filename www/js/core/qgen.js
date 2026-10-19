@@ -17,6 +17,8 @@ const QGen=(()=>{
  const shuf=a=>{for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
  const pick=a=>a[Math.floor(Math.random()*a.length)];
  const qid=u=>String(u).split("/").pop();
+ /* photos with printed names give the answer away: skip covers, posters, logos, signatures */
+ const textyImg=u=>/cover|magazine|poster|logo|signature|autograph|tunivisions|title|caption|stamp|banknote/i.test(decodeURIComponent(String(u||"")));
  const img=u=>u?String(u).replace(/^http:/,"https:")+"?width=360":null;
  const withTimeout=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error("timeout")),ms))]);
 
@@ -62,7 +64,7 @@ const QGen=(()=>{
  /* ---------- cinema generators (El Gouna) ---------- */
  const CAT={photo:["🎬 Who is this?","🎬 مين ده؟"],film:["🎬 Which film?","🎬 أنهي فيلم؟"],dir:["🎬 Director","🎬 المخرج"],year:["🎬 Release year","🎬 سنة العرض"],
   phar:["👑 Pharaohs","👑 الفراعنة"],site:["🏛 Monuments","🏛 الآثار"],gov:["🗺 Governorates","🗺 المحافظات"],trivia:["📚 Trivia","📚 معلومات عامة"]};
- function cinemaGen(actorsAll,filmsAll,n,lv){lv=lv||0;const actors=top(actorsAll,lv<1?50:lv<3?110:400),films=top(filmsAll,lv<1?250:lv<3?700:4000);
+ function cinemaGen(actorsAll,filmsAll,n,lv){lv=lv||0;actorsAll=actorsAll.filter(a=>!textyImg(a.img));const actors=top(actorsAll,lv<1?50:lv<3?110:400),films=top(filmsAll,lv<1?250:lv<3?700:4000);
   const byId={};actors.forEach(a=>byId[qid(a.p)]=a);const allIds=new Set(actorsAll.map(a=>qid(a.p)));
   const fl=films.filter(f=>f.far).map(f=>({...f,id:qid(f.f),cs:(f.cast||"").split("|").filter(Boolean)}));
   const titles=fl.map(f=>nm(f.fen,f.far));
@@ -79,7 +81,7 @@ const QGen=(()=>{
   return gens}
 
  /* ---------- Egypt general-knowledge generators (bonus quiz) ---------- */
- function egyptGen(pharAll,sitesAll,govs,n){const phar=top(pharAll,70),sites=top(sitesAll.filter(x=>!/^(KV|TT|WV|QV|DB)\s?\d/i.test(x.sen)),120);
+ function egyptGen(pharAll,sitesAll,govs,n){pharAll=pharAll.filter(p=>!textyImg(p.img));const phar=top(pharAll,70),sites=top(sitesAll.filter(x=>!/^(KV|TT|WV|QV|DB)\s?\d/i.test(x.sen)),120);
   const gl=govs.filter(g=>!g.en.toLowerCase().includes(g.cen.toLowerCase())&&!g.ar.includes(g.car));
   return{
    phar:()=>{const p=pick(freshOf(phar,x=>"ph:"+qid(x.p),"ph:"));if(!p)return null;return mc("ph:"+qid(p.p),CAT.phar,["Which ruler of Egypt is shown here?","أي حاكم لمصر يظهر هنا؟"],nm(p.en,p.ar),phar.map(x=>nm(x.en,x.ar)),n,img(p.img))},
@@ -92,7 +94,7 @@ const QGen=(()=>{
   let tok=ls.get("otdbToken");
   const getTok=async()=>{const j=await withTimeout(fetch("https://opentdb.com/api_token.php?command=request").then(r=>r.json()),8000);tok=j.token;ls.set("otdbToken",tok);return tok};
   if(!tok)await getTok();
-  const cat=pick([23,20,22]);
+  const cat=pick([23,20]); // history, mythology
   const url=t=>`https://opentdb.com/api.php?amount=${count}&category=${cat}&type=multiple&token=${t}`;
   let j=await withTimeout(fetch(url(tok)).then(r=>r.json()),8000);
   if(j.response_code===3){await getTok();j=await withTimeout(fetch(url(tok)).then(r=>r.json()),8000)}
@@ -121,7 +123,7 @@ const QGen=(()=>{
    if(navigator.onLine===false&&!mem.sites&&!ls.get("wd2.sites"))throw 0;const[phar,sites,govs]=await withTimeout(Promise.all([safe("pharaohs"),safe("sites"),safe("govs")]),8000);
    const gens=egyptGen(phar,sites,govs,opts);
    let live=draw(gens,shuf(["phar","site","gov","site","phar"]),Math.ceil(count*1.6));
-   if(lang==="en"){try{live=live.concat(await withTimeout(otdb(Math.max(2,Math.round(count*.4))),6000))}catch(e){}}
+   if(lang==="en"){try{live=live.concat(await withTimeout(otdb(Math.max(1,Math.round(count*.25))),6000))}catch(e){}}
    const loc=shuf(local.filter(q=>!isSeen(q.key))).slice(0,1);
    const fin=await finalize(shuf([...live,...loc]),count);if(fin.length>=count)return fin;
    return fin.concat(shuf(local.filter(q=>!fin.some(f=>f.key===q.key)))).slice(0,count)}catch(e){return shuf(local.filter(q=>!isSeen(q.key))).concat(shuf(local)).slice(0,count)}}
