@@ -2,11 +2,11 @@
 defineBonus({
   id:"catch",
   name:["Treasure Catch","صيد الكنوز"],
-  desc:["Catch the falling treasure · 30s","اجمع الكنوز المتساقطة · 30 ثانية"],
+  desc:["Catch the falling treasure · 30s · score 40 to win","اجمع الكنوز المتساقطة · 30 ثانية · 40 نقطة للفوز"],
   game:(()=>{let end=0,pts=0,items=[],nextSp=0,bx=0,tx=0,lastT=0,over=false,fl=[],mood=0,moodUntil=0;
  return{help:{en:"Drag to move the basket. Catch coins (+2) and gems (+6), dodge rocks (−3)",ar:"اسحب لتحريك السلة. اجمع العملات (+2) والجواهر (+6) وتجنب الصخور (−3)"},
  start(){end=performance.now()+30000+(inv.time>0?(inv.time--,10000):0);pts=0;items=[];nextSp=performance.now()+300;bx=tx=W/2;lastT=0;over=false;fl=[]},
- status(){return L2("Time ","الوقت ")+Math.max(0,Math.ceil((end-performance.now())/1000))+"s · "+L2("Score ","النقاط ")+Math.max(0,pts)},
+ status(){return L2("Time ","الوقت ")+Math.max(0,Math.ceil((end-performance.now())/1000))+"s · "+L2("Score ","النقاط ")+Math.max(0,pts)+"/40"},
  move(x){tx=x},tap(x){tx=x},
  draw(t){const dt=lastT?Math.min(.05,(t-lastT)/1000):0;lastT=t;
   const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#f7d58a");g.addColorStop(1,"#d9a85a");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
@@ -22,5 +22,5 @@ defineBonus({
   ctx.fillStyle="#7a4a1a";ctx.beginPath();ctx.moveTo(bx-50,by);ctx.lineTo(bx+50,by);ctx.lineTo(bx+38,by+34);ctx.lineTo(bx-38,by+34);ctx.closePath();ctx.fill();ctx.strokeStyle="#e6b84a";ctx.lineWidth=3;ctx.stroke();
   face(bx,by+16,18,t<moodUntil?mood:1);
   fl=fl.filter(f=>t-f.t0<700);fl.forEach(f=>{const k=(t-f.t0)/700;ctx.globalAlpha=1-k;ctx.font="bold 24px system-ui";ctx.textAlign="center";ctx.lineWidth=4;ctx.strokeStyle="#3a2208";ctx.fillStyle=f.c;ctx.strokeText(f.s,f.x,f.y-k*40);ctx.fillText(f.s,f.x,f.y-k*40);ctx.globalAlpha=1});
-  if(!over&&t>=end){over=true;finishBonus(Math.max(0,pts))}}}})()
+  if(!over&&t>=end){over=true;if(pts>=40)finishBonus(pts);else loseBonus(L2("You scored "+Math.max(0,pts)+" — you need 40.","سجلت "+Math.max(0,pts)+" — تحتاج 40."))}}}})()
 });

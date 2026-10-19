@@ -1,4 +1,9 @@
-let lang="en",score=0,sel=null,mode="map",cur=null;const seen=new Set(),done=new Set();const need=i=>SITES[i]&&SITES[i].req!=null?SITES[i].req:50*i*(i+2);const unlocked=i=>i===0||score>=need(i)||done.has(SITES[i].id);
+let lang="en",score=0,sel=null,mode="map",cur=null;const seen=new Set(),done=new Set();const need=i=>SITES[i]&&SITES[i].req!=null?SITES[i].req:50*i*(i+2);const has3=id=>(SR[id]||[]).some(v=>v>=3);
+/* A place opens when the PREVIOUS place has a ★★★ result on any level.
+   (Places you already played stay open.) Points are for the shop, not for unlocking. */
+const unlocked=i=>i===0||(i>0&&!!SITES[i]&&(has3(SITES[i-1].id)||done.has(SITES[i].id)));
+const nextLocked=()=>SITES.findIndex((s,i)=>!unlocked(i));
+const lockText=i=>i>0&&SITES[i-1]?L2("Get ★★★ in "+SITES[i-1].en+" to unlock","احصل على ★★★ في "+SITES[i-1].ar+" لفتحه"):"";
 const $=id=>document.getElementById(id);
 const lvl={},ach=new Set();let streak=0,lastDay="",dailyClaim="",dailyDay="",dailyId="",lastWin=0,lastFirst=false,lastDaily=0,lastStars=1,lastLvlUnlock=false,lastBoost=false,huntMiss=0,huntHints=0,lastEvent=false,lastTime=0,lastPar=1,lastPerf=1,lastTs=1,lastSite=null;
 const today=()=>dstr(0);
@@ -22,3 +27,7 @@ const starTxt=n=>"★".repeat(n)+"☆".repeat(3-n);
    from a finished/abandoned run can never fire into the map or into another game. */
 let runSeq=0;
 const later=(fn,ms)=>{const s=runSeq;return setTimeout(()=>{if(s===runSeq&&mode==="world")fn()},ms)};
+/* Lives: every place run starts with ❤❤❤ (one less on level 5+). A mistake costs a heart; 0 = level lost. */
+let lives=3,maxLives=3,runLost=false,hurtT=0,contUsed=false,loseT=0,pendingWin=0,doneMode="win",bonusKey="";
+const hearts=()=>"❤".repeat(Math.max(0,lives))+"♡".repeat(Math.max(0,maxLives-lives));
+let lastLostHeart=false,lastNewUnlock=false;

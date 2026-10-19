@@ -1,6 +1,6 @@
 /* ---------- WORLD BUILDING BLOCKS ---------- */
-const B=(x,y,w,h,c="#cfa86a",s=true)=>({t:"blk",x,y,w,h,c,s});
-const C=(x,y,r,c="#d8bd86")=>({t:"col",x,y,r,c,s:true});
+const Blk=(x,y,w,h,c="#cfa86a",s=true)=>({t:"blk",x,y,w,h,c,s});
+const Col=(x,y,r,c="#d8bd86")=>({t:"col",x,y,r,c,s:true});
 const WA=(x,y,w,h)=>({t:"water",x,y,w,h,s:true});
 const PA=(x,y)=>({t:"palm",x,y,s:false});
 const PY=(x,y,sz)=>({t:"pyr",x,y,sz,s:true});

@@ -1,6 +1,7 @@
 /* Marsa Matruh – Cleopatra Beach — Catch the pearls (timing) */
 definePlace({
   id:"matruh",
+  lives:5,               // hearts per run (default 3)
   // map pin
   lon:27.23, lat:31.35,
   en:"Marsa Matruh – Cleopatra Beach",

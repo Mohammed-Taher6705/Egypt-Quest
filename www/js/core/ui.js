@@ -20,9 +20,9 @@ function checkUnlocks(){SITES.forEach((st,i)=>{if(unlocked(i)&&!unSet.has(st.id)
 const chestShort=()=>{const ms=chestAt-Date.now();if(ms<=0)return L2("OPEN","افتح");const m=Math.ceil(ms/60000);return Math.floor(m/60)+"h"+m%60+"m"};
 function render(){checkUnlocks();newQuestDay();checkAch();save();const t=T[lang],ar=lang==="ar";
  document.documentElement.lang=lang;document.documentElement.dir=ar?"rtl":"ltr";
- $("title").textContent=t.title;$("score").textContent=t.score+": "+bal()+(streak>0?"  🔥"+streak:"");{let nx=-1;SITES.forEach((s,i)=>{if(!unlocked(i)&&(nx<0||need(i)<need(nx)))nx=i});$("hint").textContent=t.hintMap+(nx>=0?"\n🔒 "+L2("Next place at "+need(nx)+" points (you have "+score+")","المكان التالي عند "+need(nx)+" نقطة (لديك "+score+")"):"")}$("lang").textContent=ar?"English":"العربية";
+ $("title").textContent=t.title;$("score").textContent=t.score+": "+bal()+(streak>0?"  🔥"+streak:"");{const nx=nextLocked();$("hint").textContent=t.hintMap+(nx>=0?"\n🔒 "+L2("Next: ","التالي: ")+(ar?SITES[nx].ar:SITES[nx].en)+" — "+lockText(nx):"")}$("lang").textContent=ar?"English":"العربية";
  const idx=sel?SITES.indexOf(sel):0,lk=!!sel&&!unlocked(idx);
- $("enter").textContent=lk?t.locked.replace("#",need(idx)).replace("%",score):t.enter;$("enter").disabled=lk;
+ $("enter").textContent=lk?"🔒 "+lockText(idx):t.enter;$("enter").disabled=lk;
  const cs=mode==="world"&&cur&&cur.bonus?cur.bonus[ar?1:0]:mode==="world"&&sel?(ar?sel.ar:sel.en):"";$("gtitle").textContent=(cur&&cur.bonus?"":L2("Lv ","م ")+curLevel+(curseRun?" ☠":"")+" · ")+"🪙"+bal()+" · "+cs;$("gtitle").title=cs;$("gback").textContent=t.back;
  $("gline").textContent="";$("ginfo").style.display=cur&&cur.bonus?"none":"";$("hintbtn").innerHTML='<span class="e">💡</span><span class="l">'+(inv.hint>0?inv.hint:Ads.canReward()?"🎬+"+ADS.rewardedHints:"0")+'</span>';$("hintbtn").style.display=cur&&cur.game?"none":"";
  if(cur&&mode==="world"&&!cur.game){const n=found.size,tot=cur.arts.length;$("tray").textContent="🔎 "+n+"/"+tot}
@@ -35,7 +35,7 @@ $("lside").innerHTML="";$("rside").innerHTML="";
  if(eventMult()>1)sb("lside","🎉","×2",null,"done")}
 sb("rside","🎮",L2("Bonus","إضافي"),openBonus);sb("rside","📜",L2("Book","السجل"),openCollection);sb("rside","🛒",L2("Shop","المتجر"),openShop);
 
- const inf=$("info");if(sel&&mode==="map"){inf.style.display="block";$("iname").textContent=ar?sel.ar:sel.en;$("iera").textContent=ar?sel.eraAr:sel.eraEn;$("idesc").textContent=(ar?sel.dAr:sel.dEn)+"\n🎮 "+CH[sel.id][ar?1:0]+"\n★ "+starSum(sel.id)+"/15"+(lk?"\n🔒 "+L2("Locked: earn "+(need(idx)-score)+" more total points","مقفل: اربح "+(need(idx)-score)+" نقطة إجمالية إضافية"):"")}else inf.style.display="none";Ads.update()}
+ const inf=$("info");if(sel&&mode==="map"){inf.style.display="block";$("iname").textContent=ar?sel.ar:sel.en;$("iera").textContent=ar?sel.eraAr:sel.eraEn;$("idesc").textContent=(ar?sel.dAr:sel.dEn)+"\n🎮 "+CH[sel.id][ar?1:0]+"\n★ "+starSum(sel.id)+"/15"+(lk?"\n🔒 "+lockText(idx):"")}else inf.style.display="none";Ads.update()}
 
 /* Rewarded ad: +N hints (offered when you are out of hints, and in the shop) */
 async function adForHints(after){if(!Ads.canReward()){toastTx=L2("Out of hints — get more in the 🛒 shop","انتهت التلميحات — اشترِ المزيد من 🛒 المتجر");toastT=performance.now()+2200;return}

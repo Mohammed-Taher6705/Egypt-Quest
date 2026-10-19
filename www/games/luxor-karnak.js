@@ -22,7 +22,7 @@ definePlace({
  const pos=(L,k)=>[L.x0+(k%L.cols)*(L.cw+L.gap),L.y0+Math.floor(k/L.cols)*(L.ch+L.gap)];
  return{help:{en:"Flip two cards at a time and match the pairs",ar:"اقلب بطاقتين في كل مرة وطابق الأزواج"},
  start(){const ty=TY.slice(0,4+LV()),a=[...ty,...ty];for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}cards=a.map(type=>({type,up:false,ok:false}));first=-1;lock=0;pairs=0;tries=0},
- status(){return L2("Pairs ","الأزواج ")+pairs+"/"+cards.length/2},
+ status(){const fr=Math.max(0,cards.length/2-(tries-pairs));return L2("Pairs ","الأزواج ")+pairs+"/"+cards.length/2+" · "+L2("Free misses ","أخطاء مسموحة ")+fr},
  draw(){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#caa468");g.addColorStop(1,"#a98350");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   const L=lay();cards.forEach((c,k)=>{const[x,y]=pos(L,k);
    if(c.up||c.ok){ctx.fillStyle="#f3ead2";rr(x,y,L.cw,L.ch,10);ctx.fill();ctx.lineWidth=c.ok?4:2;ctx.strokeStyle=c.ok?"#4caf6a":"#8a6a35";ctx.stroke();
@@ -34,5 +34,5 @@ definePlace({
   if(first<0){first=k;return}
   const a=cards[first];first=-1;tries++;
   if(a.type===c.type){a.ok=c.ok=true;pairs++;snd("ok");if(pairs===cards.length/2)winGame(tries<=pairs*1.5?3:tries<=pairs*2.2?2:1)}
-  else{lock=now+800;later(()=>{a.up=false;c.up=false},800)}}}})()
+  else{lock=now+800;if(tries-pairs>cards.length/2)snd("bad");later(()=>{a.up=false;c.up=false},800)}}}})()
 });

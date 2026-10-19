@@ -28,8 +28,8 @@ definePlace({
   for(let tries=0;tries<6&&cand.length<2;tries++){pic=pickScene("edfu");calcEq();cand=[...Array(N).keys()].filter(i=>eq[i].some(v=>!v))}
   rot=Array(N).fill(0);shf(cand).slice(0,Math.min(cand.length,[2,4,7,11,18][lv])).forEach(i=>{const bad=[1,2,3].filter(r=>!eq[i][r]);rot[i]=bad[Math.floor(Math.random()*bad.length)]});
   moves=0;par=rot.reduce((m,r,i)=>{let k=0;while(!eq[i][(r+k)%4])k++;return m+k},0)},
- status(){return L2("Upright ","معتدلة ")+rot.filter((r,i)=>eq[i][r]).length+"/"+rot.length+" · "+L2("Moves ","حركات ")+moves},
+ status(){return L2("Upright ","معتدلة ")+rot.filter((r,i)=>eq[i][r]).length+"/"+rot.length+" · "+L2("Moves ","حركات ")+moves+"/"+(par*2+6)},
  draw(){sandBg();const{s,x0,y0,t}=tileLay(n),ps=300/n;ctx.fillStyle="#3a2208";ctx.fillRect(x0-6,y0-6,s+12,s+12);
   rot.forEach((r,i)=>{const x=x0+(i%n)*t,y=y0+Math.floor(i/n)*t;ctx.save();ctx.translate(x+t/2,y+t/2);ctx.rotate(r*Math.PI/2);ctx.drawImage(pic,(i%n)*ps,Math.floor(i/n)*ps,ps,ps,-t/2,-t/2,t,t);ctx.restore();ctx.strokeStyle="rgba(58,34,8,.85)";ctx.lineWidth=2;ctx.strokeRect(x,y,t,t)})},
- tap(px,py){const{x0,y0,t}=tileLay(n),c=Math.floor((px-x0)/t),r=Math.floor((py-y0)/t);if(c<0||c>=n||r<0||r>=n)return;const i=r*n+c;rot[i]=(rot[i]+1)%4;moves++;snd("tap");if(okAll())winGame(moves<=par?3:moves<=par+3?2:1)}}})()
+ tap(px,py){const{x0,y0,t}=tileLay(n),c=Math.floor((px-x0)/t),r=Math.floor((py-y0)/t);if(c<0||c>=n||r<0||r>=n)return;const i=r*n+c;rot[i]=(rot[i]+1)%4;moves++;snd("tap");if(okAll())winGame(moves<=par?3:moves<=par+3?2:1);else if(moves>=par*2+6)loseGame(L2("Out of moves!","نفدت الحركات!"))}}})()
 });

@@ -22,6 +22,7 @@ www/                         ← the whole web app (also Capacitor's webDir)
       progress.js            ← levels, stars, intro, win/result dialog
       retention.js           ← daily login, quests, chest, achievements, reminders
       shop.js  bonus.js  ui.js  input.js  scenes.js
+      qgen.js                ← live question generator (Wikidata + Open Trivia DB) + quiz renderer
   games/                     ← ONE FILE PER PLACE (map pin + info + game)
     grand-egyptian-museum.js  giza-pyramids.js  alexandria-qaitbay.js  luxor-karnak.js
     aswan-philae.js  abu-simbel.js  siwa-oasis.js  edfu-temple.js  saint-catherine-sinai.js
@@ -104,6 +105,24 @@ npm run android:open     # open in Android Studio → Run / Build → Generate S
 ```
 App id: `com.amsolutions.egyptquest` (change in `capacitor.config.json` before the first Play upload).
 Regenerate icons after editing `resources/`: `npx @capacitor/assets generate --android --assetPath resources`.
+
+## Changelog — v4.1
+
+**Progression (harder, more replay)**: a place unlocks only after **★★★ on the previous place** (any level); points are for the shop.
+★★★ requires a run with no lost hearts. Replaying an already-starred level pays 25% (was 40%).
+
+**Win or lose**: every place run has **❤❤❤** (❤❤ on level 5+, Marsa Matruh has 5). Each mistake costs a heart; at 0 the level is lost
+(no points). Puzzles without mistakes have move limits (Siwa, Edfu, Philae); Luxor allows N free mismatches; Kharga costs a heart
+for a full-but-wrong grid; Giza hunt costs a heart every 3 misses. One "watch an ad → +1 ❤ and continue" per run.
+Bonus games need a target: Scarab Rush 30, Treasure Catch 40, Pharaoh Quiz 3/5.
+
+**Fresh questions, never repeated** (`www/js/core/qgen.js`, no API keys):
+- Pharaoh Quiz: Wikidata (pharaoh photos, monuments → governorate, governorate capitals, Arabic + English) + Open Trivia DB (English, session token).
+- El Gouna: Wikidata Egyptian cinema with photos — *who is this star?*, *which film did X appear in?*, director, release year — mixed with the hand-written bank.
+- Shown questions are remembered in `localStorage` (`egyptquest.seen`); data is cached 3 days; offline falls back to the built-in banks.
+- Easy levels use well-known stars/films (by Wikipedia popularity); photo distractors match gender; photos with printed names are skipped.
+
+To add your own place's questions or tune difficulty, see `QGen` in `qgen.js`.
 
 ## Changelog — v4.0
 

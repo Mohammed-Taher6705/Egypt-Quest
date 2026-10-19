@@ -22,7 +22,7 @@ definePlace({
   icon(ctx){ctx.beginPath();ctx.moveTo(-10,6);ctx.lineTo(-3,-8);ctx.lineTo(4,6);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(0,6);ctx.lineTo(5,-2);ctx.lineTo(10,6);ctx.closePath();ctx.fill();},
   world:mk({w:1400,h:1000,ground:"#d9b46c",bg:"#b08850",start:[700,900],items:[...sandDeco(7,1400,1000),
  PY(420,300,220),PY(780,480,200),PY(1080,640,100),
- B(495,742,95,36,"#d9b87a"),B(575,738,32,44,"#e3c48a"),B(607,750,35,9,"#c9a366",false),B(607,769,35,9,"#c9a366",false),
+ Blk(495,742,95,36,"#d9b87a"),Blk(575,738,32,44,"#e3c48a"),Blk(607,750,35,9,"#c9a366",false),Blk(607,769,35,9,"#c9a366",false),
  PA(150,850),PA(1250,300),PA(1280,880),
  LB(420,170,"Pyramid of Khufu","هرم خوفو"),LB(780,362,"Pyramid of Khafre","هرم خفرع"),LB(1080,572,"Pyramid of Menkaure","هرم منكاورع"),LB(560,722,"The Great Sphinx","أبو الهول")]}),
   makeArts:()=>gizaArts(),
