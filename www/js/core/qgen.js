@@ -79,7 +79,7 @@ const QGen=(()=>{
   return gens}
 
  /* ---------- Egypt general-knowledge generators (bonus quiz) ---------- */
- function egyptGen(pharAll,sitesAll,govs,n){const phar=top(pharAll,70),sites=top(sitesAll,120);
+ function egyptGen(pharAll,sitesAll,govs,n){const phar=top(pharAll,70),sites=top(sitesAll.filter(x=>!/^(KV|TT|WV|QV|DB)\s?\d/i.test(x.sen)),120);
   const gl=govs.filter(g=>!g.en.toLowerCase().includes(g.cen.toLowerCase())&&!g.ar.includes(g.car));
   return{
    phar:()=>{const p=pick(freshOf(phar,x=>"ph:"+qid(x.p),"ph:"));if(!p)return null;return mc("ph:"+qid(p.p),CAT.phar,["Which ruler of Egypt is shown here?","أي حاكم لمصر يظهر هنا؟"],nm(p.en,p.ar),phar.map(x=>nm(x.en,x.ar)),n,img(p.img))},
