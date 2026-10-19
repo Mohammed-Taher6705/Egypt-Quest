@@ -19,6 +19,8 @@ definePlace({
   fact:["El Gouna Film Festival was founded in 2017, and its awards are called the Stars of El Gouna.","تأسس مهرجان الجونة السينمائي عام 2017، وتُسمّى جوائزه «نجمة الجونة»."],
   icon(ctx){ctx.fillRect(-9,-1,18,9);ctx.beginPath();ctx.moveTo(-9,-3);ctx.lineTo(9,-8);ctx.lineTo(9,-4);ctx.lineTo(-9,1);ctx.closePath();ctx.fill();},
   game:(()=>{
+ /* Hand-written Egyptian cinema bank (Arabic) — mixed with fresh Wikidata
+    questions with photos: who is this actor, which film, director, release year. */
  const FILMS=["الإرهاب والكباب","طيور الظلام","عمارة يعقوبيان","صعيدي في الجامعة الأمريكية","همام في أمستردام","إسماعيلية رايح جاي","الناظر","الكيف","إبراهيم الأبيض","عنتر شايل سيفه","ابن حميدو","سكر هانم","عبود على الحدود","بخيت وعديلة","الفيل الأزرق","الجزيرة","خلي بالك من زوزو","باب الحديد","الأرض","شيء من الخوف","إشاعة حب","اللمبي"];
  const MEN=["عادل إمام","محمد هنيدي","يحيى الفخراني","محمود عبد العزيز","علاء ولي الدين","أحمد زكي","محمد سعد","أحمد حلمي","نور الشريف","يوسف وهبي","توفيق الدقن","عبد المنعم مدبولي","إسماعيل ياسين","كريم عبد العزيز","أحمد مكي","محمد رمضان"];
  const WOMEN=["زينات صدقي","ماري منيب","تحية كاريوكا","سعاد حسني","فاتن حمامة","شادية","يسرا","ميرفت أمين","نادية الجندي","لبلبة"];
@@ -53,23 +55,19 @@ definePlace({
   P('علاء ولي الدين في الناظر: "كابتن كابتن هو كله ضرب ضرب مفيش..." كمّل',"شتيمة",["حكم","جزاء","كورة"]),
   P('عبد الفتاح القصري في سكر هانم: "ست أنا مش شايف..." كمّل',"قدامي",["حاجة","كويس","خالص"]),
   P('علاء ولي الدين في عبود على الحدود: "قولي عملك إيه كرشي، كرشي..." كمّل',"اللي إنت ناسيه",["اللي في بطني","اللي مش بيشبع","اللي إنت قاعد عليه"])];
- let qs=[],qi=0,opts=[],picked=-1,errs=0,qEnd=0,tlim=0,nq=5,wait=false;
- const shuf=a=>{for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a};
- function load(){const q=qs[qi],n=LV()<2?3:4;let wrong=q.w?[...q.w]:q.pool.filter(x=>x!==q.a);wrong=shuf(wrong).slice(0,n-1);opts=shuf([q.a,...wrong]);picked=-1;wait=false;qEnd=tlim?performance.now()+tlim*1000:0}
- const next=()=>{qi++;if(qi>=nq)winGame(errs===0?3:errs<=1?2:1);else load()};
- const lay=()=>{const bw=Math.min(W-70,420);ctx.font="bold 22px system-ui";const ls=wrapT(qs[qi].q,bw),top=Math.max(206,158+ls.length*30+26),bh=Math.max(40,Math.min(68,(H-top-60)/opts.length-10));return{bw,ls,top,bh,x:(W-bw)/2}};
- return{help:{en:"Egyptian movie quiz! Which film is a scene or a line from, who the actor is, and what the punchline is.",ar:"أسئلة عن الأفلام المصرية! المشهد ده من فيلم إيه، الإيفيه ده من فيلم إيه، الممثل ده مين، والإيفيه في المشهد ده إيه."},
- start(){const x=LV(),types=x<1?["film","actor"]:x<2?["film","actor","scene"]:["film","actor","scene","punch"];nq=5+Math.min(x,5);tlim=x>=3?Math.max(8,20-(x-3)*6):0;
-  qs=shuf(BANK.filter(q=>types.includes(q.t))).slice(0,nq);nq=qs.length;qi=0;errs=0;load()},
- status(){return L2("Question ","السؤال ")+Math.min(qi+1,nq)+"/"+nq+" · "+L2("Mistakes ","الأخطاء ")+errs},
- draw(t){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#3a0f1c");g.addColorStop(1,"#0e0a1a");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ const LOCAL=BANK.map((q,i)=>{const n=4;let wrong=q.w?[...q.w]:q.pool.filter(x=>x!==q.a);wrong=QGen.shuf(wrong).slice(0,n-1);const opts=QGen.shuf([q.a,...wrong]).map(x=>[x,x]);
+  return{key:"gl:"+i,lt:q.t,cat:["🎬 "+TY[q.t][1],"🎬 "+TY[q.t][0]],q:[q.q,q.q],opts,ans:opts.findIndex(o=>o[0]===q.a)}});
+ let nq=5,tlim=0,nopt=3;
+ const film=t=>{const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#3a0f1c");g.addColorStop(1,"#0e0a1a");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
   const sp=ctx.createRadialGradient(W/2,60,10,W/2,60,W*.7);sp.addColorStop(0,"rgba(255,224,138,.28)");sp.addColorStop(1,"rgba(255,224,138,0)");ctx.fillStyle=sp;ctx.fillRect(0,0,W,H);
-  if(W>=340){ctx.fillStyle="#0a0a0f";ctx.fillRect(4,0,22,H);ctx.fillRect(W-26,0,22,H);ctx.fillStyle="#d8c8a0";for(let y=((t/40)%26)-26;y<H;y+=26){ctx.fillRect(9,y,12,14);ctx.fillRect(W-21,y,12,14)}}
-  if(!qs[qi])return;const q=qs[qi],{bw,ls,top,bh,x}=lay(),ar=lang==="ar";ctx.textAlign="center";
-  ctx.font="bold 15px system-ui";ctx.fillStyle="#e6b84a";ctx.fillText("🎬 "+(ar?TY[q.t][0]:TY[q.t][1]),W/2,146);if(!ar){ctx.font="13px system-ui";ctx.fillStyle="#c9b27a";ctx.fillText(TY[q.t][0],W/2,164)}
-  ctx.font="bold 22px system-ui";ctx.fillStyle="#fff";ls.forEach((l,k)=>ctx.fillText(l,W/2,196+k*30));
-  if(tlim&&picked<0&&qEnd){const left=Math.max(0,(qEnd-t)/(tlim*1000));ctx.fillStyle="rgba(255,255,255,.18)";ctx.fillRect(x,top-14,bw,5);ctx.fillStyle=left<.3?"#d9534f":"#e6b84a";ctx.fillRect(x,top-14,bw*left,5);if(left<=0&&!wait){wait=true;errs++;snd("bad");picked=-2;later(next,1100)}}
-  opts.forEach((o,k)=>{const y=top+k*(bh+10);let c="#2a2a45";if(picked!==-1){if(o===q.a)c="#2e7d4f";else if(k===picked)c="#a33a3a"}ctx.fillStyle=c;rr(x,y,bw,bh,14);ctx.fill();ctx.strokeStyle="#e6b84a";ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle="#fff";ctx.font="18px system-ui";ctx.fillText(o,W/2,y+bh/2+6)})},
- tap(px,py){if(picked!==-1||wait||!qs[qi])return;const{bw,top,bh,x}=lay(),k=opts.findIndex((o,i)=>{const y=top+i*(bh+10);return px>=x&&px<=x+bw&&py>=y&&py<=y+bh});if(k<0)return;
-  picked=k;wait=true;if(opts[k]===qs[qi].a)snd("ok");else{errs++;snd("bad")}later(next,950)}}})()
+  if(W>=340){ctx.fillStyle="#0a0a0f";ctx.fillRect(4,0,22,H);ctx.fillRect(W-26,0,22,H);ctx.fillStyle="#d8c8a0";for(let y=((t/40)%26)-26;y<H;y+=26){ctx.fillRect(9,y,12,14);ctx.fillRect(W-21,y,12,14)}}};
+ const V=makeQuizView({bg:film,timeLimit:()=>tlim,onEnd:(c,e)=>winGame(e===0?3:e<=1?2:1)});
+ return{help:{en:"Egyptian cinema quiz! Recognise the stars from their photos, the films, directors and famous lines. Every game has new questions.",ar:"مسابقة السينما المصرية! اعرف النجوم من صورهم، والأفلام والمخرجين والإيفيهات. أسئلة جديدة في كل مرة."},
+ start(){const x=LV();nq=5+Math.min(x,5);nopt=x<2?3:4;tlim=x>=3?Math.max(8,20-(x-3)*6):0;
+  const kinds=x<1?["photo","film"]:x<2?["photo","film","year"]:["photo","film","year","dir"];
+  const types=x<1?["film","actor"]:x<2?["film","actor","scene"]:["film","actor","scene","punch"];
+  const local=LOCAL.filter(q=>types.includes(q.lt)).map(q=>{if(q.opts.length>nopt){const a=q.opts[q.ans],w=QGen.shuf(q.opts.filter((_,i)=>i!==q.ans)).slice(0,nopt-1),o=QGen.shuf([a,...w]);return{...q,opts:o,ans:o.indexOf(a)}}return q});
+  V.load(QGen.cinema(nq,nopt,kinds,local))},
+ status(){return V.loading?L2("Loading…","جاري التحميل…"):L2("Question ","السؤال ")+Math.min(V.index+1,V.count||nq)+"/"+(V.count||nq)+" · "+L2("Mistakes ","الأخطاء ")+V.errs},
+ draw:t=>V.draw(t),tap:(x,y)=>V.tap(x,y)}})()
 });

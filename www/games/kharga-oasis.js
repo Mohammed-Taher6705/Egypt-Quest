@@ -28,5 +28,5 @@ definePlace({
  draw(){papyrus();const{s,x0,y0}=lay();
   g.forEach((v,i)=>{const x=x0+(i%N)*s,y=y0+Math.floor(i/N)*s;ctx.fillStyle=fixed[i]?"rgba(180,150,100,.9)":"rgba(255,244,214,.8)";rr(x+3,y+3,s-6,s-6,8);ctx.fill();ctx.strokeStyle=conflict(i)?"#d9534f":"#8a6a35";ctx.lineWidth=conflict(i)?4:2;ctx.stroke();if(v)glyph(SYM[v-1],x+s/2,y+s/2,s/46)})},
  tap(px,py){if(won)return;const{s,x0,y0}=lay(),c=Math.floor((px-x0)/s),r=Math.floor((py-y0)/s);if(c<0||c>=N||r<0||r>=N)return;const i=r*N+c;if(fixed[i])return;g[i]=(g[i]+1)%(N+1);snd("tap");
-  if(g.every(v=>v)&&g.every((v,k)=>!conflict(k))){won=true;const sec=(performance.now()-t0)/1000;winGame(sec<=empty*5?3:sec<=empty*10?2:1)}}}})()
+  if(g.every(v=>v)&&g.every((v,k)=>!conflict(k))){won=true;const sec=(performance.now()-t0)/1000;winGame(sec<=empty*5?3:sec<=empty*10?2:1)}else if(g.every(v=>v)){const bad=g.map((v,k)=>conflict(k)&&!fixed[k]);snd("bad");later(()=>{bad.forEach((b,k)=>{if(b)g[k]=0})},500)}}}})()
 });

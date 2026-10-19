@@ -15,7 +15,8 @@ addEventListener("pagehide",save);
  else if(b&&BONUS[b]){$("bmenu").style.display="none";startBonus(b)}})();
 
 Ads.init();
+QGen.warm();   // prefetch fresh quiz data in the background
 App.init();
 
 (function loop(){const t=performance.now();requestAnimationFrame(loop);
- if(mode==="map"){updGS(t);drawMap(t);drawGS(t)}else if(cur.game){cur.game.draw(t);const st=cur.game.status()+(cur.bonus||runWon?"":" · ⏱"+Math.floor((performance.now()-runStart)/1000)+"s");if(st!==lastS){$("tray").textContent=st;lastS=st}}else{drawWorld(t);const st="🔎 "+found.size+"/"+cur.arts.length+(cur.arts.length-found.size===1?" · "+L2("1 left!","واحدة متبقية!"):"")+(runWon?"":" · ⏱"+Math.floor((performance.now()-runStart)/1000)+"s");if(st!==lastS){$("tray").textContent=st;lastS=st}}drawFx(t);drawCeleb(t);if(chestEl&&mode==="map"){const x=chestShort();if(chestEl.textContent!==x)chestEl.textContent=x;chestEl.parentNode.classList.toggle("ready",chestAt<=Date.now())}})(0);
+ if(mode==="map"){updGS(t);drawMap(t);drawGS(t)}else if(cur.game){cur.game.draw(t);const st=(cur.bonus?"":hearts()+" · ")+cur.game.status()+(cur.bonus||runWon?"":" · ⏱"+Math.floor((performance.now()-runStart)/1000)+"s");if(st!==lastS){$("tray").textContent=st;lastS=st}}else{drawWorld(t);const st=hearts()+" · 🔎 "+found.size+"/"+cur.arts.length+(cur.arts.length-found.size===1?" · "+L2("1 left!","واحدة متبقية!"):"")+(runWon?"":" · ⏱"+Math.floor((performance.now()-runStart)/1000)+"s");if(st!==lastS){$("tray").textContent=st;lastS=st}}drawFx(t);drawCeleb(t);if(chestEl&&mode==="map"){const x=chestShort();if(chestEl.textContent!==x)chestEl.textContent=x;chestEl.parentNode.classList.toggle("ready",chestAt<=Date.now())}})(0);
