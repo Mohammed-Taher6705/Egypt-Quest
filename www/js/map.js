@@ -30,7 +30,10 @@ function smoothMap(pts){ctx.beginPath();pts.forEach(([a,b],i)=>{const p=mp(a,b);
 function alongNile(u){const n=NILE.length-1,f=u*n,i=Math.min(n-1,Math.floor(f)),k=f-i,a=NILE[i],b=NILE[i+1];return mp(a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k)}
 function boat(x,y,s,dir){ctx.save();ctx.translate(x,y);ctx.scale(dir*s,s);ctx.fillStyle="#7a4a1a";ctx.beginPath();ctx.moveTo(-10,0);ctx.lineTo(10,0);ctx.lineTo(6,5);ctx.lineTo(-6,5);ctx.closePath();ctx.fill();ctx.fillStyle="#fff";ctx.beginPath();ctx.moveTo(0,-14);ctx.lineTo(9,-1);ctx.lineTo(0,-1);ctx.closePath();ctx.fill();ctx.restore()}
 function camel(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle="#8a5a28";ctx.beginPath();ctx.ellipse(0,0,10,5,0,0,7);ctx.fill();ctx.beginPath();ctx.arc(-3,-6,4,0,7);ctx.arc(3,-6,4,0,7);ctx.fill();ctx.fillRect(8,-10,3,8);ctx.beginPath();ctx.arc(11,-11,3,0,7);ctx.fill();ctx.fillRect(-7,3,2,7);ctx.fillRect(5,3,2,7);ctx.restore()}
-function mapLogo(img,x,y,r){const size=Math.min(img.naturalWidth||1,img.naturalHeight||1),sx=((img.naturalWidth||size)-size)/2,sy=((img.naturalHeight||size)-size)/2;ctx.save();ctx.beginPath();ctx.arc(x,y,r-1,0,Math.PI*2);ctx.clip();ctx.drawImage(img,sx,sy,size,size,x-r+1,y-r+1,2*r-2,2*r-2);ctx.restore();ctx.save();ctx.beginPath();ctx.arc(x,y,r-1,0,Math.PI*2);ctx.strokeStyle="#f7d58a";ctx.lineWidth=2;ctx.stroke();ctx.restore()}
+function mapLogo(img,x,y,r){const size=Math.min(img.naturalWidth||1,img.naturalHeight||1),sx=((img.naturalWidth||size)-size)/2,sy=((img.naturalHeight||size)-size)/2;
+ ctx.save();ctx.shadowColor="rgba(0,0,0,.38)";ctx.shadowBlur=9;ctx.fillStyle="#17283a";ctx.beginPath();ctx.arc(x,y,r+2,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+ ctx.beginPath();ctx.arc(x,y,r-2,0,Math.PI*2);ctx.clip();ctx.drawImage(img,sx,sy,size,size,x-r+2,y-r+2,2*r-4,2*r-4);ctx.restore();
+ ctx.save();ctx.beginPath();ctx.arc(x,y,r-1,0,Math.PI*2);ctx.strokeStyle="#ffe4a0";ctx.lineWidth=2.5;ctx.stroke();ctx.beginPath();ctx.arc(x-r*.28,y-r*.3,r*.22,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,.28)";ctx.fill();ctx.restore()}
 /* Fallback marker art when a place has no logo image: drawn by the place's own icon(ctx). */
 function icon(st,x,y,k){ctx.save();ctx.translate(x,y);ctx.scale(k,k);ctx.fillStyle="#4a2f0a";ctx.strokeStyle="#4a2f0a";ctx.lineWidth=1.8;ctx.lineJoin="round";
  try{st.icon&&st.icon(ctx)}catch(e){}
