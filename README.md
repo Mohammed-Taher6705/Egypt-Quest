@@ -11,7 +11,8 @@ www/                         ← the whole web app (also Capacitor's webDir)
   css/style.css
   js/
     config.js                ← VERSION, place order, ADS settings  ← edit here
-    map.js                   ← the Egypt map: outline, Nile, markers, golden scarabs
+    map.js                   ← the Egypt map: outline, Nile, labels, markers, golden scarabs, gestures
+    map-art.js               ← illustrated map BACKGROUND (code-painted terrain, seas, relief) — no text/markers
     world.js                 ← hidden-object world engine (used by Giza)
     ads.js                   ← ad layer: AdMob (Android) / H5 Games Ads (web) / test mock
     app.js                   ← Android back button, splash, service worker, external links
@@ -59,6 +60,24 @@ Order in `index.html`: `config → core → map/world → ads/app → games → 
 
 Use `later(fn, ms)` instead of `setTimeout` inside games — it is cancelled automatically when the run ends.
 
+## The map scene (v4.2)
+
+The map is drawn in two layers every frame:
+
+| Layer | File | What it contains |
+|---|---|---|
+| Background | `www/js/map-art.js` (`MapArt`) | seas with depth and reef shelves, neighbouring lands fading into the navy theme, sand texture, shaded relief (Red Sea Hills, Sinai, Gilf Kebir, dunes, oasis depressions, the Nile valley), oases, the Nile, Delta, Lake Nasser, Suez Canal, gold coastline & graticule, night-time city lights |
+| Interactive | `www/js/map.js` | labels (EN/AR), markers & destination images, stars, daily badge, golden/cursed scarab, boats, camels, compass, all gestures and hit-testing |
+
+- The background is **painted by code in longitude/latitude** with the same projection as `mp()` — it never contains text, markers, icons or UI.
+- It is cached at device resolution: moved/scaled during a pinch or drag, re-painted crisp ~140 ms after the gesture ends.
+- The relief is computed once (in ≤12 ms slices, so the game never freezes) and cached on the device in IndexedDB.
+- Palettes per map theme (Classic / Sunset / Night) are at the top of `map-art.js` (`PAL`).
+- Export a clean artwork image (no UI), e.g. for store screenshots, from the browser console:
+  `MapArt.renderImage(2560,1707).toBlob(b=>open(URL.createObjectURL(b)))`
+
+Backup of the previous map: `backup/map-v4.1/` (also git tag `map-v4.1-backup`).
+
 ## Run locally
 
 ```bash
@@ -105,6 +124,13 @@ npm run android:open     # open in Android Studio → Run / Build → Generate S
 ```
 App id: `com.amsolutions.egyptquest` (change in `capacitor.config.json` before the first Play upload).
 Regenerate icons after editing `resources/`: `npx @capacitor/assets generate --android --assetPath resources`.
+
+## Changelog — v4.2 (map redesign)
+
+- Illustrated, code-painted Egypt map (`map-art.js`) with shaded relief, realistic Nile course (Lake Nasser → Qena bend → Delta branches), Delta & valley vegetation, oases, seas with depth, fading neighbouring lands, gold coastline and graticule; works in all three map themes.
+- Map centred below the top HUD; governorate labels fade in by zoom (small Delta governorates only when zoomed); fixed spiky label outlines.
+- Emoji removed from the map and HUD: vector glyphs on the canvas (daily star, star counts, curse/ward feedback, compass rose) and SVG/CSS-mask icons in the HUD (`assets/icons/ui-*.svg`, `setRich()` in `ui.js`). Bonus/Book/Shop now have their own icons.
+- Fixes: hearts disappeared and quiz score lost its ✓/✗ (stripped by the emoji filter) → text hearts ♥/♡ and ✓/✗; mute button was blank on first launch; score pill overflowed on phones; emoji filter missed ⭐ ⚡ ⏱ ⬜ ☠ ♾ ⚠.
 
 ## Changelog — v4.1
 
