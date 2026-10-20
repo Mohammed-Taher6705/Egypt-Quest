@@ -212,3 +212,30 @@ button:active{transform:translateY(1px) scale(.98)}
  #bmenu .box h2,#done .box h2,#adov .box h2{font-size:20px}
  #bmenu .box .bbtn,#done .box .bbtn,#adov .box .bbtn{min-height:44px}
 }
+
+/* ---------- Vector icons that replace emoji (map HUD, info card, side buttons) ----------
+   <span class="ico ico-NAME"> is created by setRich() in js/core/ui.js. The SVG is used as a
+   CSS mask, so each icon takes the colour of the surrounding text (gold hint, dark on gold buttons). */
+.ico{display:inline-block;width:1.05em;height:1.05em;vertical-align:-.18em;flex:none;background-color:currentColor;-webkit-mask:var(--i) center/contain no-repeat;mask:var(--i) center/contain no-repeat}
+.ico-lock{--i:url("../assets/icons/ui-lock.svg")}
+.ico-flame{--i:url("../assets/icons/ui-flame.svg")}
+.ico-ticket{--i:url("../assets/icons/ui-ticket.svg")}
+.ico-play{--i:url("../assets/icons/ui-play.svg")}
+.ico-star{--i:url("../assets/icons/ui-star.svg")}
+.ico-gamepad{--i:url("../assets/icons/ui-gamepad.svg")}
+.ico-coin{--i:url("../assets/icons/ui-coin.svg")}
+.ico-skull{--i:url("../assets/icons/ui-skull.svg")}
+#hint .ico,#score .ico-flame,#idesc .ico,#gtitle .ico-coin,.sbtn .l .ico-flame{color:var(--gold)}
+#gtitle .ico-skull{color:#ef9a8e}
+.sbtn .l .ico{width:.95em;height:.95em}
+#hint .ico-lock{margin-inline-end:2px}
+/* each side button gets its own icon (Bonus / Book / Shop no longer share the clipboard) */
+.sbtn .e[data-icon="bonus"]{background-image:url("../assets/icons/ui-gamepad.svg")}
+.sbtn .e[data-icon="book"]{background-image:url("../assets/icons/ui-book.svg")}
+.sbtn .e[data-icon="shop"]{background-image:url("../assets/icons/ui-bag.svg")}
+.sbtn .e[data-icon="event"]{background-image:url("../assets/icons/ui-sparkle.svg")}
+.sbtn .e[data-icon="hint"]{background-image:url("../assets/icons/ui-bulb.svg")}
+#score{white-space:nowrap}#score .ico-coin{color:var(--gold)}
+h1{white-space:nowrap}
+#itix{display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+@media(max-width:380px){h1{font-size:0;gap:0}.hud>div{gap:5px}#score{padding-inline:9px}}  /* very narrow phones: logo only, so the score, sound and language buttons fit */

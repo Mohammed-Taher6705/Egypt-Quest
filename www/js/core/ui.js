@@ -1,7 +1,7 @@
 function openCollection(){const ar=lang==="ar",m=$("bmenu");let n=0;
  const rows=SITES.map(s=>{const ok=done.has(s.id);if(ok)n++;return'<div class="bbtn collection-row" style="cursor:default"><b><span class="status-icon '+(ok?'is-done':'is-locked')+'" aria-hidden="true"></span>'+(ar?s.ar:s.en)+' · ★ '+starSum(s.id)+'/15</b><small>'+(ok?FACTS[s.id][ar?1:0]:L2("Finish this site's challenge to reveal a fact","أكمل تحدي هذا الموقع لتكشف معلومة"))+'</small></div>'}).join("")+achBox();
  m.innerHTML='<div class="box collection-box"><h2 style="color:var(--gold);margin:0 0 4px">'+L2("Collection","المجموعة")+'</h2><p style="margin:0 0 6px;color:var(--mut);font-size:13px">'+L2("Sites completed ","المواقع المكتملة ")+n+'/'+SITES.length+' · '+L2("Balance ","الرصيد ")+bal()+" · "+L2("Earned ","المكتسب ")+score+'</p><p class="save-note" style="margin:0 0 8px;font-size:12px;color:var(--mut)">'+L2("Progress saves automatically on this device","يُحفظ تقدمك تلقائيًا على هذا الجهاز")+'</p>'+rows+
- '<button class="bbtn" id="bk" style="text-align:center">💾 '+L2("Backup / restore progress","نسخ احتياطي / استعادة التقدم")+'</button><button class="bbtn" id="rst" style="text-align:center">'+L2("Reset progress","إعادة ضبط التقدم")+'</button><button class="bbtn" id="cl" style="text-align:center">'+L2("Close","إغلاق")+'</button></div>';
+ '<button class="bbtn" id="bk" style="text-align:center">'+L2("Backup / restore progress","نسخ احتياطي / استعادة التقدم")+'</button><button class="bbtn" id="rst" style="text-align:center">'+L2("Reset progress","إعادة ضبط التقدم")+'</button><button class="bbtn" id="cl" style="text-align:center">'+L2("Close","إغلاق")+'</button></div>';
  m.style.display="flex";$("cl").onclick=()=>{m.style.display="none"};$("bk").onclick=openBackup;let armed=false;
  $("rst").onclick=()=>{if(!armed){armed=true;$("rst").textContent=L2("Tap again to confirm","اضغط مرة أخرى للتأكيد");return}score=0;done.clear();seen.clear();for(const k in prog)delete prog[k];Object.keys(lvl).forEach(k=>delete lvl[k]);ach.clear();streak=0;lastDay="";dailyClaim="";for(const k in SR)delete SR[k];spent=0;inv.hint=5;inv.time=0;inv.boost=0;inv.freeze=0;inv.ward=0;curseOn=false;own.clear();theme="classic";qDay="";qIds=[];qp={};qcl={};chestAt=0;loginDay=0;for(const k in ENDL)delete ENDL[k];sel=null;m.style.display="none";render()}}
 
@@ -16,34 +16,37 @@ $("hintbtn").onclick=()=>{if(inv.hint<1){adForHints();return}const rem=cur.arts.
  hintIdx=rem[Math.floor(Math.random()*rem.length)];hintUntil=performance.now()+2500;inv.hint--;huntHints++;
  const a=cur.arts[hintIdx];V.ox=W/2-a[0]*V.z;V.oy=H/2-a[1]*V.z;clampV();render()};
 const unSet=new Set();let unInit=false;
-function checkUnlocks(){SITES.forEach((st,i)=>{if(unlocked(i)&&!unSet.has(st.id)){unSet.add(st.id);if(unInit){toastTx="🗺️ "+L2("New place unlocked: ","مكان جديد: ")+(lang==="ar"?st.ar:st.en);toastT=performance.now()+3500;snd("win")}}});unInit=true}
+function checkUnlocks(){SITES.forEach((st,i)=>{if(unlocked(i)&&!unSet.has(st.id)){unSet.add(st.id);if(unInit){toastTx=L2("New place unlocked: ","مكان جديد: ")+(lang==="ar"?st.ar:st.en);toastT=performance.now()+3500;snd("win")}}});unInit=true}
 const chestShort=()=>{const ms=chestAt-Date.now();if(ms<=0)return L2("OPEN","افتح");const m=Math.ceil(ms/60000);return Math.floor(m/60)+"h"+m%60+"m"};
+/* Fill an element with text and vector icons: setRich(el,["Points: 5 ","@flame","3"]).
+   "@name" → <span class="ico ico-name">, styled in css/style.css (CSS-mask icons take the text colour). */
+function setRich(el,parts){el.textContent="";for(const p of parts){if(typeof p==="string"&&p[0]==="@"&&p.length>1){const i=document.createElement("span");i.className="ico ico-"+p.slice(1);i.setAttribute("aria-hidden","true");el.appendChild(i)}else el.appendChild(document.createTextNode(String(p)))}}
 function render(){checkUnlocks();newQuestDay();checkAch();save();const t=T[lang],ar=lang==="ar";
  document.documentElement.lang=lang;document.documentElement.dir=ar?"rtl":"ltr";
- $("title").textContent=t.title;$("score").textContent=t.score+": "+bal()+(streak>0?"  🔥"+streak:"");{const nx=nextLocked();$("hint").textContent=t.hintMap+(nx>=0?"\n🔒 "+L2("Next: ","التالي: ")+(ar?SITES[nx].ar:SITES[nx].en)+" — "+lockText(nx):"")}$("lang").textContent=ar?"English":"العربية";
+ $("title").textContent=t.title;setRich($("score"),["@coin"," "+bal(),...(streak>0?["  ","@flame",String(streak)]:[])]);$("score").setAttribute("aria-label",t.score+": "+bal()+(streak>0?" · "+L2("streak ","تتابع ")+streak:""));$("score").title=t.score;{const nx=nextLocked();setRich($("hint"),[t.hintMap,...(nx>=0?["\n","@lock"," "+L2("Next: ","التالي: ")+(ar?SITES[nx].ar:SITES[nx].en)+" — "+lockText(nx)]:[])])}$("lang").textContent=ar?"English":"العربية";
  const idx=sel?SITES.indexOf(sel):0,lk=!!sel&&!unlocked(idx);
- $("enter").textContent=lk?"🔒 "+lockText(idx):t.enter;$("enter").disabled=lk;
- const cs=mode==="world"&&cur&&cur.bonus?cur.bonus[ar?1:0]:mode==="world"&&sel?(ar?sel.ar:sel.en):"";$("gtitle").textContent=(cur&&cur.bonus?"":L2("Lv ","م ")+curLevel+(curseRun?" ☠":"")+" · ")+"🪙"+bal()+" · "+cs;$("gtitle").title=cs;$("gback").textContent=t.back;
- $("gline").textContent="";$("ginfo").style.display=cur&&cur.bonus?"none":"";$("hintbtn").innerHTML='<span class="e">💡</span><span class="l">'+(inv.hint>0?inv.hint:Ads.canReward()?"🎬+"+ADS.rewardedHints:"0")+'</span>';$("hintbtn").style.display=cur&&cur.game?"none":"";
- if(cur&&mode==="world"&&!cur.game){const n=found.size,tot=cur.arts.length;$("tray").textContent="🔎 "+n+"/"+tot}
- {const tk=sel&&mode==="map"&&sel.ticketUrl;$("itix").style.display=tk?"inline-block":"none";if(tk){$("itix").textContent="🎟 "+L2("Book tickets","احجز التذاكر");$("itix").onclick=e=>{e.preventDefault();openExternal(sel.ticketUrl)}}}
- const sb=(side,emoji,label,onclick,cls)=>{const b=document.createElement("button");b.className="sbtn"+(cls?" "+cls:"");const e=document.createElement("span");e.className="e";e.textContent=emoji;const keys=side==="lside"?["daily","chest","quests"]:["bonus","book","shop"];e.dataset.icon=keys[$(side).children.length]||"quests";const l=document.createElement("span");l.className="l";l.textContent=label;b.appendChild(e);b.appendChild(l);if(onclick)b.onclick=onclick;$(side).appendChild(b);return l};
+ if(lk)setRich($("enter"),["@lock"," "+lockText(idx)]);else $("enter").textContent=t.enter;$("enter").disabled=lk;
+ const cs=mode==="world"&&cur&&cur.bonus?cur.bonus[ar?1:0]:mode==="world"&&sel?(ar?sel.ar:sel.en):"";setRich($("gtitle"),[...(cur&&cur.bonus?[]:[L2("Lv ","م ")+curLevel,...(curseRun?[" ","@skull"]:[])," · "]),"@coin"," "+bal()+" · "+cs]);$("gtitle").title=cs;$("gback").textContent=t.back;
+ $("gline").textContent="";$("ginfo").style.display=cur&&cur.bonus?"none":"";{const hb=$("hintbtn");hb.textContent="";const e=document.createElement("span");e.className="e";e.dataset.icon="hint";const l=document.createElement("span");l.className="l";setRich(l,inv.hint>0?[String(inv.hint)]:Ads.canReward()?["@play","+"+ADS.rewardedHints]:["0"]);hb.append(e,l);hb.setAttribute("aria-label",L2("Hint","تلميح"))}$("hintbtn").style.display=cur&&cur.game?"none":"";
+ if(cur&&mode==="world"&&!cur.game){const n=found.size,tot=cur.arts.length;$("tray").textContent=L2("Found ","وُجد ")+n+"/"+tot}
+ {const tk=sel&&mode==="map"&&sel.ticketUrl;$("itix").style.display=tk?"inline-block":"none";if(tk){setRich($("itix"),["@ticket"," "+L2("Book tickets","احجز التذاكر")]);$("itix").onclick=e=>{e.preventDefault();openExternal(sel.ticketUrl)}}}
+ const sb=(side,icon,label,onclick,cls)=>{const b=document.createElement("button");b.className="sbtn"+(cls?" "+cls:"");const e=document.createElement("span");e.className="e";e.dataset.icon=icon;e.setAttribute("aria-hidden","true");const l=document.createElement("span");l.className="l";Array.isArray(label)?setRich(l,label):l.textContent=label;b.appendChild(e);b.appendChild(l);if(onclick)b.onclick=onclick;$(side).appendChild(b);return l};
 $("lside").innerHTML="";$("rside").innerHTML="";
-{const dI=getDaily(),dn=dailyClaim===today(),dl=sb("lside","⭐",dn?"✓"+(streak>1?"🔥"+streak:""):L2("Daily","يومي"),()=>{select(dI);if(unlocked(SITES.findIndex(x=>x.id===dI)))openLevels()},dn?"done":"");
- chestEl=sb("lside","🎁",chestShort(),openChest);
- sb("lside","📋",qDone()+"/3",openQuests,qDone()>=3?"done":"");
- if(eventMult()>1)sb("lside","🎉","×2",null,"done")}
-sb("rside","🎮",L2("Bonus","إضافي"),openBonus);sb("rside","📜",L2("Book","السجل"),openCollection);sb("rside","🛒",L2("Shop","المتجر"),openShop);
+{const dI=getDaily(),dn=dailyClaim===today(),dl=sb("lside","daily",dn?["✓",...(streak>1?[" ","@flame",String(streak)]:[])]:L2("Daily","يومي"),()=>{select(dI);if(unlocked(SITES.findIndex(x=>x.id===dI)))openLevels()},dn?"done":"");
+ chestEl=sb("lside","chest",chestShort(),openChest);
+ sb("lside","quests",qDone()+"/3",openQuests,qDone()>=3?"done":"");
+ if(eventMult()>1)sb("lside","event","×2",null,"done")}
+sb("rside","bonus",L2("Bonus","إضافي"),openBonus);sb("rside","book",L2("Book","السجل"),openCollection);sb("rside","shop",L2("Shop","المتجر"),openShop);
 
- const inf=$("info");if(sel&&mode==="map"){inf.style.display="block";$("iname").textContent=ar?sel.ar:sel.en;$("iera").textContent=ar?sel.eraAr:sel.eraEn;$("idesc").textContent=(ar?sel.dAr:sel.dEn)+"\n🎮 "+CH[sel.id][ar?1:0]+"\n★ "+starSum(sel.id)+"/15"+(lk?"\n🔒 "+lockText(idx):"")}else inf.style.display="none";Ads.update()}
+ const inf=$("info");if(sel&&mode==="map"){inf.style.display="block";$("iname").textContent=ar?sel.ar:sel.en;$("iera").textContent=ar?sel.eraAr:sel.eraEn;setRich($("idesc"),[(ar?sel.dAr:sel.dEn)+"\n","@gamepad"," "+CH[sel.id][ar?1:0]+"\n","@star"," "+starSum(sel.id)+"/15",...(lk?["\n","@lock"," "+lockText(idx)]:[])])}else inf.style.display="none";Ads.update()}
 
 /* Rewarded ad: +N hints (offered when you are out of hints, and in the shop) */
-async function adForHints(after){if(!Ads.canReward()){toastTx=L2("Out of hints — get more in the 🛒 shop","انتهت التلميحات — اشترِ المزيد من 🛒 المتجر");toastT=performance.now()+2200;return}
- const ok=await Ads.rewarded("hints");if(ok){inv.hint+=ADS.rewardedHints;toastTx="💡 +"+ADS.rewardedHints;toastT=performance.now()+1800;snd("ok")}
+async function adForHints(after){if(!Ads.canReward()){toastTx=L2("Out of hints — get more in the shop","انتهت التلميحات — اشترِ المزيد من المتجر");toastT=performance.now()+2200;return}
+ const ok=await Ads.rewarded("hints");if(ok){inv.hint+=ADS.rewardedHints;toastTx="+"+ADS.rewardedHints+" "+L2("hints","تلميحات");toastT=performance.now()+1800;snd("ok")}
  else{toastTx=L2("No ad available right now","لا يوجد إعلان متاح الآن");toastT=performance.now()+2000}render();after&&after()}
 
 /* Keep rendered interface text consistent even when older game modules provide emoji labels. */
-const UI_EMOJI=/[\u{1F000}-\u{1FAFF}\u{2705}\u{274C}\u{2764}\uFE0F]/gu;
+const UI_EMOJI=/[\u{1F000}-\u{1FAFF}\u{2705}\u{274C}\u{2764}\u{2B50}\u{2B1C}\u{23F0}-\u{23FA}\u{231A}\u{231B}\u{26A0}\u{26A1}\u{2620}\u{267E}\uFE0F]/gu; // emoji only — ★ ☆ ♥ ♡ ✓ ✗ are kept
 function cleanUiEmoji(root=document.body){const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const a=[];while(w.nextNode())a.push(w.currentNode);a.forEach(n=>{const v=n.nodeValue.replace(UI_EMOJI,"");if(v!==n.nodeValue)n.nodeValue=v})}
 const uiEmojiObserver=new MutationObserver(()=>{uiEmojiObserver.disconnect();cleanUiEmoji();uiEmojiObserver.observe(document.body,{subtree:true,childList:true,characterData:true})});
 uiEmojiObserver.observe(document.body,{subtree:true,childList:true,characterData:true});

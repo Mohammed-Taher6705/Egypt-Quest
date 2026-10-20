@@ -29,5 +29,5 @@ let runSeq=0;
 const later=(fn,ms)=>{const s=runSeq;return setTimeout(()=>{if(s===runSeq&&mode==="world")fn()},ms)};
 /* Lives: every place run starts with ❤❤❤ (one less on level 5+). A mistake costs a heart; 0 = level lost. */
 let lives=3,maxLives=3,runLost=false,hurtT=0,contUsed=false,loseT=0,pendingWin=0,doneMode="win",bonusKey="";
-const hearts=()=>"❤".repeat(Math.max(0,lives))+"♡".repeat(Math.max(0,maxLives-lives));
+const hearts=()=>"♥".repeat(Math.max(0,lives))+"♡".repeat(Math.max(0,maxLives-lives)); // text hearts (not emoji)
 let lastLostHeart=false,lastNewUnlock=false;
