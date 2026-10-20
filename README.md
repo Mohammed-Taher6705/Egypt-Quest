@@ -125,6 +125,10 @@ npm run android:open     # open in Android Studio → Run / Build → Generate S
 App id: `com.amsolutions.egyptquest` (change in `capacitor.config.json` before the first Play upload).
 Regenerate icons after editing `resources/`: `npx @capacitor/assets generate --android --assetPath resources`.
 
+## Changelog — v4.2.1
+
+- Siwa Oasis sliding puzzle: **Hint** button. A hint plans a solution from the current board (A* search; fallback = undoing the shuffle) and highlights the next 3 tiles to slide with an arrow. Uses the shared hint stock (rewarded ad when empty); more than one hint caps the result at ★★.
+
 ## Changelog — v4.2 (map redesign)
 
 - Illustrated, code-painted Egypt map (`map-art.js`) with shaded relief, realistic Nile course (Lake Nasser → Qena bend → Delta branches), Delta & valley vegetation, oases, seas with depth, fading neighbouring lands, gold coastline and graticule; works in all three map themes.
