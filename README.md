@@ -134,6 +134,10 @@ npm test             # unit tests of the progression rules (Node's built-in runn
 npm run test:e2e     # browser tests of the progression flows (needs: pip install playwright && playwright install chromium)
 ```
 
+## Changelog — v4.3.1
+
+- El Gouna Film Festival is now about **Egyptian films from 2015 on**: live Wikidata questions only use films released from 2015 (and the actors in them), and the built-in bank was replaced with post-2015 films — stars, directors, release years, plots and new film jokes (title riddles). Set `MIN_YEAR` in `games/el-gouna.js` to change the cut-off.
+
 ## Changelog — v4.3 (progression)
 
 **Ankh tokens** (☥) — a separate counter from points; points stay the shop currency.

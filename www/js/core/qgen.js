@@ -64,7 +64,9 @@ const QGen=(()=>{
  /* ---------- cinema generators (El Gouna) ---------- */
  const CAT={photo:["🎬 Who is this?","🎬 مين ده؟"],film:["🎬 Which film?","🎬 أنهي فيلم؟"],dir:["🎬 Director","🎬 المخرج"],year:["🎬 Release year","🎬 سنة العرض"],
   phar:["👑 Pharaohs","👑 الفراعنة"],site:["🏛 Monuments","🏛 الآثار"],gov:["🗺 Governorates","🗺 المحافظات"],trivia:["📚 Trivia","📚 معلومات عامة"]};
- function cinemaGen(actorsAll,filmsAll,n,lv){lv=lv||0;actorsAll=actorsAll.filter(a=>!textyImg(a.img));const actors=top(actorsAll,lv<1?50:lv<3?110:400),films=top(filmsAll,lv<1?250:lv<3?700:4000);
+ function cinemaGen(actorsAll,filmsAll,n,lv,minYear){lv=lv||0;actorsAll=actorsAll.filter(a=>!textyImg(a.img));
+  /* minYear: only films released from that year on (and the actors who appear in them); falls back to all if the pool is too small */
+  if(minYear){const rf=filmsAll.filter(f=>+f.y>=minYear);if(rf.length>=30){filmsAll=rf;const cast=new Set();rf.forEach(f=>(f.cast||"").split("|").forEach(c=>c&&cast.add(c)));const ra=actorsAll.filter(a=>cast.has(qid(a.p)));if(ra.length>=15)actorsAll=ra}}const actors=top(actorsAll,lv<1?50:lv<3?110:400),films=top(filmsAll,lv<1?250:lv<3?700:4000);
   const byId={};actors.forEach(a=>byId[qid(a.p)]=a);const allIds=new Set(actorsAll.map(a=>qid(a.p)));
   const fl=films.filter(f=>f.far).map(f=>({...f,id:qid(f.f),cs:(f.cast||"").split("|").filter(Boolean)}));
   const titles=fl.map(f=>nm(f.fen,f.far));
@@ -76,7 +78,7 @@ const QGen=(()=>{
     const fem=star.sex===FEM;return mc("sf:"+f.id,CAT.film,[`Which film did ${star.en} appear in?`,fem?`${star.ar} شاركت في أنهي فيلم؟`:`${star.ar} شارك في أنهي فيلم؟`],nm(f.fen,f.far),wrong,n,img(star.img))},
    dir:()=>{const cand=fl.filter(f=>+f.nd===1&&f.dAr);const f=pick(freshOf(cand,x=>"fd:"+x.id,"fd:"));if(!f)return null;
     return mc("fd:"+f.id,CAT.dir,[`Who directed the film "${f.fen||f.far}"?`,`مين مخرج فيلم "${f.far}"؟`],nm(f.dEn,f.dAr),cand.map(x=>nm(x.dEn,x.dAr)),n)},
-   year:()=>{const cand=fl.filter(f=>+f.y>1920);const f=pick(freshOf(cand,x=>"fy:"+x.id,"fy:"));if(!f)return null;const y=+f.y,ys=new Set();while(ys.size<6){const d=(Math.floor(Math.random()*12)+2)*(Math.random()<.5?-1:1);if(y+d<=new Date().getFullYear())ys.add(y+d)}
+   year:()=>{const cand=fl.filter(f=>+f.y>1920&&(!minYear||+f.y>=minYear));const f=pick(freshOf(cand,x=>"fy:"+x.id,"fy:"));if(!f)return null;const y=+f.y,ys=new Set();const sp=minYear?5:12,lo=minYear?Math.min(y,minYear)-2:0;let g=0;while(ys.size<6&&g++<200){const d=(Math.floor(Math.random()*sp)+(minYear?1:2))*(Math.random()<.5?-1:1);if(y+d<=new Date().getFullYear()&&y+d>=lo)ys.add(y+d)}
     return mc("fy:"+f.id,CAT.year,[`In which year was "${f.fen||f.far}" released?`,`فيلم "${f.far}" اتعرض سنة كام؟`],[String(y),String(y)],[...ys].map(v=>[String(v),String(v)]),n)}};
   return gens}
 
@@ -111,9 +113,9 @@ const QGen=(()=>{
 
  return{warm,markSeen,isSeen,shuf,
   /* El Gouna: n questions, kinds by level, `local` = fallback questions from the built-in bank */
-  async cinema(count,opts,kinds,local,lv){try{
+  async cinema(count,opts,kinds,local,lv,minYear){try{
    if(navigator.onLine===false&&!mem.films&&!ls.get("wd2.films"))throw 0;const[actors,films]=await withTimeout(Promise.all([safe("actors"),safe("films")]),8000);
-   const gens=cinemaGen(actors,films,opts,lv);
+   const gens=cinemaGen(actors,films,opts,lv,minYear);
    const live=draw(gens,shuf(kinds.slice()),Math.ceil(count*1.6));
    const mix=shuf([...live,...shuf(local.filter(q=>!isSeen(q.key))).slice(0,Math.max(1,Math.round(count*.3)))]);
    const fin=await finalize(mix,count);if(fin.length>=count)return fin;
