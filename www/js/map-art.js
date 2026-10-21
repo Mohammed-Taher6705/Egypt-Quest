@@ -107,6 +107,9 @@ const MapArt=(()=>{
   [30.6,29.47,.19,.035,-.18],[30.38,29.2,.07,.035,.4],[25.33,29.22,.1,.025,0],[25.78,29.17,.08,.022,0], // Qarun, Rayan, Siwa salt lakes
   [32.4,30.35,.07,.12,.35],[32.29,30.57,.03,.02,0],[29.93,31.12,.12,.03,.2],[31.97,31.16,.22,.06,-.2],[30.85,31.17,.22,.035,0] // Bitter, Timsah, Mariout, Manzala, Burullus
  ];
+ /* Bir Tawil: unclaimed land south of the 22°N border (claimed by neither Egypt nor Sudan).
+    North edge on 22°N (~95 km), south edge ~46 km; centre ≈ 21.87°N 33.75°E, ~2,060 km². */
+ const BIR_TAWIL=[[33.25,22.0],[34.12,22.0],[34.0,21.69],[33.55,21.71]];
  const SUEZ=[[32.3,31.25],[32.31,30.95],[32.27,30.6],[32.36,30.4],[32.45,30.25],[32.55,29.97]];
  const BAHR_YUSUF=[[30.85,27.55],[30.72,28.05],[30.8,28.6],[30.95,29.08],[30.86,29.3]];
  const REGIONS=[ // soft tonal variation: lon, lat, radius°, palette key, alpha
@@ -354,6 +357,10 @@ const MapArt=(()=>{
   /* 7 ── coastline: gold edge with a dark ink core; dashed gold land borders */
   g.beginPath();for(const c of D.coasts)path(g,P,c);g.strokeStyle=rgba(C.gold,.5);g.lineWidth=LW(2.4,.02);g.stroke();g.strokeStyle=rgba(C.ink,.75);g.lineWidth=LW(.9,.007);g.stroke();
   g.beginPath();for(const b of D.borders)path(g,P,b);g.setLineDash([5*v.d,4*v.d]);g.strokeStyle=rgba(C.gold,.7);g.lineWidth=1.3*v.d;g.stroke();g.setLineDash([]);
+  /* 7b ── Bir Tawil: neutral sand with fine gold hatching and a dashed outline (not part of Egypt's land) */
+  g.save();g.beginPath();path(g,P,BIR_TAWIL,true);g.fillStyle=rgba(C.sand,.6);g.fill();g.clip();
+  {const[x0,y0]=P(33.2,22.05),[x1,y1]=P(34.2,21.6),step=Math.max(4*v.d,.035*k);g.beginPath();for(let x=x0-(y1-y0);x<x1;x+=step){g.moveTo(x,y0);g.lineTo(x+(y1-y0),y1)}g.strokeStyle=rgba(C.gold,.45);g.lineWidth=Math.max(.8,.6*v.d);g.stroke()}
+  g.restore();g.beginPath();path(g,P,BIR_TAWIL,true);g.setLineDash([4*v.d,3*v.d]);g.strokeStyle=rgba(C.gold,.85);g.lineWidth=1.2*v.d;g.stroke();g.setLineDash([]);
   /* 8 ── Tropic of Cancer: a faint dashed gold parallel */
   g.beginPath();path(g,P,[[10,23.44],[50,23.44]]);g.setLineDash([10*v.d,8*v.d]);g.strokeStyle=rgba(C.gold,.2);g.lineWidth=v.d;g.stroke();g.setLineDash([])}
 

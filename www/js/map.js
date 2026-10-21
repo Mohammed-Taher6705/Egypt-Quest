@@ -74,6 +74,11 @@ function drawMap(t){
  {const a=mp(34.6,27.6),b=mp(37.6,22.6);sl(ar?"البحر الأحمر":"Red Sea",36.0,25.1,Math.atan2(b[1]-a[1],b[0]-a[0]))}
  ctx.font=serif(Math.max(11,s0*.21));sp("0.32em");ctx.fillStyle="rgba(92,58,22,.5)";
  sl(ar?"الصحراء الغربية":"WESTERN DESERT",27.8,26.3);sl(ar?"سيناء":"SINAI",33.75,29.75);sp("0px");ctx.restore();
+ // Bir Tawil (unclaimed land south of the border) — name always, "unclaimed land" note when zoomed in
+ {const[x,y]=mp(33.68,21.48),fs=Math.max(9,Math.min(13,Math.round(s0*.15)));ctx.save();ctx.textAlign="center";ctx.textBaseline="middle";ctx.lineJoin="round";
+  ctx.font="italic 600 "+fs+"px Georgia,'Times New Roman',serif";ctx.lineWidth=3;ctx.strokeStyle="rgba(10,20,32,.75)";ctx.fillStyle="rgba(255,227,160,.92)";
+  const nm=ar?"بئر طويل":"Bir Tawil";ctx.strokeText(nm,x,y);ctx.fillText(nm,x,y);
+  const a=smooth01(45,70,s0);if(a>.03){ctx.globalAlpha=a;ctx.font="italic "+Math.max(8,fs-2)+"px Georgia,'Times New Roman',serif";const sub2=ar?"أرض غير مُطالَب بها":"unclaimed land";ctx.strokeText(sub2,x,y+fs+2);ctx.fillText(sub2,x,y+fs+2)}ctx.restore()}
  // governorate names (round joins: mitred outlines grow spikes on M, N, V, W)
  ctx.save();ctx.textAlign="center";ctx.textBaseline="middle";ctx.lineJoin="round";
  const gf=Math.max(8,Math.min(12,Math.round(s0*.14))),a1=.85*smooth01(16,28,s0),a2=.85*smooth01(68,100,s0);
