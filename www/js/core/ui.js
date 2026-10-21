@@ -3,13 +3,13 @@ function openCollection(){const ar=lang==="ar",m=$("bmenu");let n=0;
  m.innerHTML='<div class="box collection-box"><h2 style="color:var(--gold);margin:0 0 4px">'+L2("Collection","المجموعة")+'</h2><p style="margin:0 0 6px;color:var(--mut);font-size:13px">'+L2("Sites completed ","المواقع المكتملة ")+n+'/'+SITES.length+' · '+L2("Balance ","الرصيد ")+bal()+" · "+L2("Earned ","المكتسب ")+score+'</p><p class="save-note" style="margin:0 0 8px;font-size:12px;color:var(--mut)">'+L2("Progress saves automatically on this device","يُحفظ تقدمك تلقائيًا على هذا الجهاز")+'</p>'+rows+
  '<button class="bbtn" id="bk" style="text-align:center">'+L2("Backup / restore progress","نسخ احتياطي / استعادة التقدم")+'</button><button class="bbtn" id="rst" style="text-align:center">'+L2("Reset progress","إعادة ضبط التقدم")+'</button><button class="bbtn" id="cl" style="text-align:center">'+L2("Close","إغلاق")+'</button></div>';
  m.style.display="flex";$("cl").onclick=()=>{m.style.display="none"};$("bk").onclick=openBackup;let armed=false;
- $("rst").onclick=()=>{if(!armed){armed=true;$("rst").textContent=L2("Tap again to confirm","اضغط مرة أخرى للتأكيد");return}score=0;done.clear();seen.clear();for(const k in prog)delete prog[k];Object.keys(lvl).forEach(k=>delete lvl[k]);ach.clear();streak=0;lastDay="";dailyClaim="";for(const k in SR)delete SR[k];spent=0;inv.hint=5;inv.time=0;inv.boost=0;inv.freeze=0;inv.ward=0;curseOn=false;own.clear();theme="classic";qDay="";qIds=[];qp={};qcl={};chestAt=0;loginDay=0;for(const k in ENDL)delete ENDL[k];sel=null;m.style.display="none";render()}}
+ $("rst").onclick=()=>{if(!armed){armed=true;$("rst").textContent=L2("Tap again to confirm","اضغط مرة أخرى للتأكيد");return}score=0;done.clear();seen.clear();for(const k in prog)delete prog[k];Object.keys(lvl).forEach(k=>delete lvl[k]);ach.clear();streak=0;lastDay="";dailyClaim="";for(const k in SR)delete SR[k];spent=0;inv.hint=5;inv.time=0;inv.boost=0;inv.freeze=0;inv.ward=0;curseOn=false;own.clear();theme="classic";qDay="";qIds=[];qp={};qcl={};chestAt=0;loginDay=0;for(const k in ENDL)delete ENDL[k];PR=Progression.fresh();trial=null;trialBack=null;sel=null;m.style.display="none";render()}}
 
 /* ---------- UI ---------- */
 function select(id){snd("tap");quipFor("select");sel=SITES.find(s=>s.id===id);if(!seen.has(id)){seen.add(id);score+=Math.round(10*RATE)}render()}
 $("x").onclick=()=>{sel=null;render()};
 $("lang").onclick=()=>{lang=lang==="en"?"ar":"en";render()};
-function exitWorld(){runSeq++;mode="map";bonusMode=false;ptr.clear();document.body.classList.remove("g");render();if(loginPending)openLogin()}
+function exitWorld(){runSeq++;mode="map";if(pendingReveal){revealAt={id:pendingReveal,t0:performance.now()};pendingReveal=null}bonusMode=false;ptr.clear();document.body.classList.remove("g");render();if(loginPending)openLogin()}
 $("enter").onclick=()=>{if(!sel)return;if(!unlocked(SITES.indexOf(sel)))return;openLevels()};
 $("gback").onclick=exitWorld;$("ginfo").onclick=()=>showIntro(null);
 $("hintbtn").onclick=()=>{if(inv.hint<1){adForHints();return}const rem=cur.arts.map((a,i)=>i).filter(i=>!found.has(i));if(!rem.length)return;
@@ -38,7 +38,7 @@ $("lside").innerHTML="";$("rside").innerHTML="";
  if(eventMult()>1)sb("lside","event","×2",null,"done")}
 sb("rside","bonus",L2("Bonus","إضافي"),openBonus);sb("rside","book",L2("Book","السجل"),openCollection);sb("rside","shop",L2("Shop","المتجر"),openShop);
 
- const inf=$("info");if(sel&&mode==="map"){inf.style.display="block";$("iname").textContent=ar?sel.ar:sel.en;$("iera").textContent=ar?sel.eraAr:sel.eraEn;setRich($("idesc"),[(ar?sel.dAr:sel.dEn)+"\n","@gamepad"," "+CH[sel.id][ar?1:0]+"\n","@star"," "+starSum(sel.id)+"/15",...(lk?["\n","@lock"," "+lockText(idx)]:[])])}else inf.style.display="none";Ads.update()}
+ const inf=$("info");if(sel&&mode==="map"){inf.style.display="block";$("iname").textContent=ar?sel.ar:sel.en;$("iera").textContent=ar?sel.eraAr:sel.eraEn;setRich($("idesc"),[(ar?sel.dAr:sel.dEn)+"\n","@gamepad"," "+CH[sel.id][ar?1:0]+"\n","@star"," "+starSum(sel.id)+"/15","  ","@ankh"," "+PR.tok,...(lk?["\n","@lock"," "+lockText(idx)]:["\n",placeGoalTxt(idx)])])}else inf.style.display="none";Ads.update()}
 
 /* Rewarded ad: +N hints (offered when you are out of hints, and in the shop) */
 async function adForHints(after){if(!Ads.canReward()){toastTx=L2("Out of hints — get more in the shop","انتهت التلميحات — اشترِ المزيد من المتجر");toastT=performance.now()+2200;return}

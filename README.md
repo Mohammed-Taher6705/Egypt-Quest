@@ -19,6 +19,7 @@ www/                         ← the whole web app (also Capacitor's webDir)
     main.js                  ← boot + render loop (loaded last)
     core/
       registry.js            ← definePlace() / defineBonus() → builds SITES, WORLDS, GAMES…
+      progression.js         ← Ankh tokens, level/place unlock rules, trials, save migration (pure, unit-tested)
       state.js  i18n.js  canvas.js  audio.js  save.js  fx.js
       progress.js            ← levels, stars, intro, win/result dialog
       retention.js           ← daily login, quests, chest, achievements, reminders
@@ -57,6 +58,7 @@ Order in `index.html`: `config → core → map/world → ads/app → games → 
    ```
 2. Add `<script src="games/my-place.js"></script>` in `index.html`.
 3. Add `"myplace"` to `SITE_ORDER` in `js/config.js` (position = unlock order).
+   Optional: `unlock:{levels:2,stars:4}` in `definePlace` changes what the previous place needs to open this one.
 
 Use `later(fn, ms)` instead of `setTimeout` inside games — it is cancelled automatically when the run ends.
 
@@ -125,6 +127,27 @@ npm run android:open     # open in Android Studio → Run / Build → Generate S
 App id: `com.amsolutions.egyptquest` (change in `capacitor.config.json` before the first Play upload).
 Regenerate icons after editing `resources/`: `npx @capacitor/assets generate --android --assetPath resources`.
 
+## Tests
+
+```bash
+npm test             # unit tests of the progression rules (Node's built-in runner, no dependencies)
+npm run test:e2e     # browser tests of the progression flows (needs: pip install playwright && playwright install chromium)
+```
+
+## Changelog — v4.3 (progression)
+
+**Ankh tokens** (☥) — a separate counter from points; points stay the shop currency.
+- A win pays Ankh = **new best stars − old best stars** on that level (levels 1–5). Replays only pay improvements, so the same stars are never paid twice. Endless and bonus games give no Ankh.
+- **Levels**: level 1 is free; level 2/3/4/5 cost 1/2/3/3 Ankh and need the previous level completed. Tap *Unlock* in the level list, or *Unlock & play* in the result dialog. Endless opens free once level 5 is completed.
+- **Places**: a place opens when the previous place has **levels 1–3 completed and 6★** (best per level, summed). Configurable in `config.js → PROGRESSION` or per place with `unlock:{levels,stars}`. Opened places never re-lock. Finishing El Gouna the same way completes the journey (new achievement).
+- **Scribe's Trials** — a no-ads, no-purchase way forward using the existing bonus games (same targets, no points):
+  - *Token Trial*: +1 Ankh when a level is blocked only by Ankh (max 2 per place).
+  - *Passage Trial*: after 3 losses in a row on a level, pass it at 0★ (max 1 per place).
+- Every way to start a level goes through one guard (`startSite`), so locked levels/places cannot be started from deep links or old buttons.
+- UI: Ankh balance and progress in the level list and info card; progress ring on the next locked place; a short reveal animation when a place opens (skipped on tap and with *reduce motion*).
+
+**Saves**: new fields `pv:2, tok, tokEarned, ul{sites,levels}, cleared, trial, fails`. A save without `pv` is migrated once: everything that was open stays open (places and levels), and Ankh = sum of your best stars. Values are validated on load. Backup codes are now `v:2`; old `v:1` codes still restore (and are migrated).
+
 ## Changelog — v4.2.1
 
 - Siwa Oasis sliding puzzle: **Hint** button. A hint plans a solution from the current board (A* search; fallback = undoing the shuffle) and highlights the next 3 tiles to slide with an arrow. Uses the shared hint stock (rewarded ad when empty); more than one hint caps the result at ★★.
@@ -138,7 +161,7 @@ Regenerate icons after editing `resources/`: `npx @capacitor/assets generate --a
 
 ## Changelog — v4.1
 
-**Progression (harder, more replay)**: a place unlocks only after **★★★ on the previous place** (any level); points are for the shop.
+**Progression (harder, more replay)**: a place unlocks only after **★★★ on the previous place** (any level); points are for the shop. *(Replaced in v4.3.)*
 ★★★ requires a run with no lost hearts. Replaying an already-starred level pays 25% (was 40%).
 
 **Win or lose**: every place run has **❤❤❤** (❤❤ on level 5+, Marsa Matruh has 5). Each mistake costs a heart; at 0 the level is lost

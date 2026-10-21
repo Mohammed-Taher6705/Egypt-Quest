@@ -2,12 +2,22 @@
    Egypt Quest — global configuration
    Edit this file to tune the game, the place order and ads.
    ============================================================ */
-const VERSION="4.2.1";
+const VERSION="4.3.0";
 
 /* Order of places on the map. Unlock cost grows with position
    (see need() in core/state.js) unless a place sets `req`.
    Each id must match a file in /games that calls definePlace({id:...}). */
 const SITE_ORDER=["gem","giza","alex","luxor","philae","abu","siwa","edfu","sinai","redsea","abydos","whitedesert","hitan","matruh","kharga","gouna"];
+
+/* ---------- Progression (see js/core/progression.js) ----------
+   levelCost        : Ankh tokens to unlock levels 1..5 (level 1 is free)
+   placeRule        : default rule to open the NEXT place: complete `levels` first levels
+                      and earn `stars` (best per level, summed) here. A place file may
+                      override it with definePlace({... unlock:{levels,stars}}).
+   tokenTrialMax    : Scribe's Token Trials (+1 Ankh) per place
+   passageTrialMax  : Scribe's Passage Trials (pass a level at 0★) per place
+   passageAfterFails: losses in a row on one level before the Passage Trial is offered */
+const PROGRESSION={levelCost:[0,1,2,3,3],placeRule:{levels:3,stars:6},tokenTrialMax:2,passageTrialMax:1,passageAfterFails:3};
 
 /* ---------- Ads ----------
    enabled   : master switch (set false to ship an ad-free build)

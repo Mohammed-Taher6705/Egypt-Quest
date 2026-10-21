@@ -1,9 +1,14 @@
 let lang="en",score=0,sel=null,mode="map",cur=null;const seen=new Set(),done=new Set();const need=i=>SITES[i]&&SITES[i].req!=null?SITES[i].req:50*i*(i+2);const has3=id=>(SR[id]||[]).some(v=>v>=3);
-/* A place opens when the PREVIOUS place has a ★★★ result on any level.
-   (Places you already played stay open.) Points are for the shop, not for unlocking. */
-const unlocked=i=>i===0||(i>0&&!!SITES[i]&&(has3(SITES[i-1].id)||done.has(SITES[i].id)));
+/* Progression state (Ankh tokens, unlocked places/levels, trials) — rules in core/progression.js.
+   A place opens when the PREVIOUS place meets its rule (default: levels 1–3 completed + 6★).
+   Places you already played stay open. Points stay a separate shop currency. */
+let PR=Progression.fresh(),pendingReveal=null;
+const unlocked=i=>i===0||(i>0&&!!SITES[i]&&(Progression.placeOpen(PR,SITES,i)||done.has(SITES[i].id)));
 const nextLocked=()=>SITES.findIndex((s,i)=>!unlocked(i));
-const lockText=i=>i>0&&SITES[i-1]?L2("Get ★★★ in "+SITES[i-1].en+" to unlock","احصل على ★★★ في "+SITES[i-1].ar+" لفتحه"):"";
+const placeProg=i=>i>0&&SITES[i-1]?Progression.placeProgress(SR,PR,SITES[i-1],Progression.ruleOf(SITES[i])):null;
+const progTxt=(pp,nm)=>L2("Complete levels 1–"+pp.needLevels+" ("+pp.levels+"/"+pp.needLevels+") and earn "+pp.needStars+"★ ("+Math.min(pp.stars,pp.needStars)+"/"+pp.needStars+") in "+nm[0],
+ "أكمل المستويات 1–"+pp.needLevels+" ("+pp.levels+"/"+pp.needLevels+") واجمع "+pp.needStars+"★ ("+Math.min(pp.stars,pp.needStars)+"/"+pp.needStars+") في "+nm[1]);
+const lockText=i=>{const pp=placeProg(i);return pp?progTxt(pp,[SITES[i-1].en,SITES[i-1].ar]):""};
 const $=id=>document.getElementById(id);
 const lvl={},ach=new Set();let streak=0,lastDay="",dailyClaim="",dailyDay="",dailyId="",lastWin=0,lastFirst=false,lastDaily=0,lastStars=1,lastLvlUnlock=false,lastBoost=false,huntMiss=0,huntHints=0,lastEvent=false,lastTime=0,lastPar=1,lastPerf=1,lastTs=1,lastSite=null;
 const today=()=>dstr(0);
@@ -30,4 +35,6 @@ const later=(fn,ms)=>{const s=runSeq;return setTimeout(()=>{if(s===runSeq&&mode=
 /* Lives: every place run starts with ❤❤❤ (one less on level 5+). A mistake costs a heart; 0 = level lost. */
 let lives=3,maxLives=3,runLost=false,hurtT=0,contUsed=false,loseT=0,pendingWin=0,doneMode="win",bonusKey="";
 const hearts=()=>"♥".repeat(Math.max(0,lives))+"♡".repeat(Math.max(0,maxLives-lives)); // text hearts (not emoji)
-let lastLostHeart=false,lastNewUnlock=false;
+let lastLostHeart=false,lastNewUnlock=false,lastTok=0,lastPrev=0,nextAct="play";
+/* Scribe's Trial run ({kind,id,li}) and where to return after it; map reveal of a newly opened place */
+let trial=null,trialBack=null,revealAt=null;

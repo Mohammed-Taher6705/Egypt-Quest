@@ -225,6 +225,11 @@ button:active{transform:translateY(1px) scale(.98)}
 .ico-gamepad{--i:url("../assets/icons/ui-gamepad.svg")}
 .ico-coin{--i:url("../assets/icons/ui-coin.svg")}
 .ico-skull{--i:url("../assets/icons/ui-skull.svg")}
+.ico-ankh{--i:url("../assets/icons/ui-ankh.svg")}
+/* v4.3 progression: level list header, unlock and Scribe's Trial rows */
+.lvhead{margin:0 0 6px;font-size:14px;line-height:1.45;color:var(--txt)}.lvhead .ico-ankh,.bbtn .ico-ankh{color:var(--gold)}
+.bbtn.unlock{background:#3a3320}.bbtn.unlock b{color:var(--gold)}
+.bbtn.trial{border-style:dashed;border-color:#8fb9e6;margin-top:-2px}.bbtn.trial b{color:#a9cdf2}
 #hint .ico,#score .ico-flame,#idesc .ico,#gtitle .ico-coin,.sbtn .l .ico-flame{color:var(--gold)}
 #gtitle .ico-skull{color:#ef9a8e}
 .sbtn .l .ico{width:.95em;height:.95em}
