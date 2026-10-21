@@ -25,7 +25,7 @@ let curseOn=false,curseRun=false,curseLost=0,lastCurse=false,curseTax=0;
 function loseBal(n){if((inv.ward||0)>0&&n>0){inv.ward--;toastTx="🛡️ "+L2("Ward blocked the curse!","الدرع صدّ اللعنة!");toastT=performance.now()+1500;return 0}n=Math.min(n,Math.max(0,bal()));if(n>0)spent+=n;return n}
 const starSum=id=>(SR[id]||[]).reduce((a,b)=>a+b,0),totalStars=()=>SITES.reduce((a,s)=>a+starSum(s.id),0);
 const TH={classic:{s1:"#0f4c75",s2:"#1b6ca8",l1:"#ead08f",l2:"#c99a55"},sunset:{s1:"#3b2a6b",s2:"#d4577a",l1:"#f3b36b",l2:"#b9663f"},night:{s1:"#050d1c",s2:"#12305a",l1:"#7a7a98",l2:"#46486a"}};
-const THN={classic:["Classic","كلاسيكي"],sunset:["Sunset","الغروب"],night:["Night","الليل"]};
+const THN={classic:["Classic (sunny)","كلاسيكي (مشمس)"],sunset:["Sunset","الغروب"],night:["Night","الليل"]};
 const LVN=[["Easy","سهل"],["Normal","عادي"],["Hard","صعب"],["Expert","خبير"],["Legend","أسطوري"]];
 const starTxt=n=>"★".repeat(n)+"☆".repeat(3-n);
 /* Run-scoped timers: games use later() instead of setTimeout so a delayed callback

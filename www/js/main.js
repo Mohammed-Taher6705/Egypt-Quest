@@ -14,6 +14,7 @@ addEventListener("pagehide",save);
  if(g){const i=SITES.findIndex(s=>s.id===g);if(i>=0){$("bmenu").style.display="none";select(g);if(unlocked(i))startSite(1)}}
  else if(b&&BONUS[b]){$("bmenu").style.display="none";startBonus(b)}})();
 
+startDaylight();  // map style follows the real sun (auto mode)
 Ads.init();
 QGen.warm();   // prefetch fresh quiz data in the background
 App.init();

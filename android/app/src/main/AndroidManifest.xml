@@ -41,6 +41,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Approximate location: only to match the map style to sunrise/sunset (asked from the Shop) -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- daily reminder / free-chest notifications (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 </manifest>

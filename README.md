@@ -134,6 +134,14 @@ npm test             # unit tests of the progression rules (Node's built-in runn
 npm run test:e2e     # browser tests of the progression flows (needs: pip install playwright && playwright install chromium)
 ```
 
+## Changelog — v4.4 (map follows the sun)
+
+- New map style **Auto** (default): sunny *Classic* by day, *Sunset* colours around sunrise and sunset (sun between −6° and +8°), *Night* after dark. It is checked every minute and when the app comes back to the foreground.
+- The sun's height is computed **on the device** (`www/js/daylight.js`) from the clock and the player's location — no API needed for the time of day, so it also works offline.
+- Location, in order: device location if the player allowed it (button in Shop → Map style; never asked at start-up) → approximate location from a free IP-geolocation API (`get.geojs.io`, fallback `ipapi.co`, no key, at most once a day) → Cairo. Only a rounded position (~10 km) is stored on the device.
+- Picking Classic / Sunset / Night in the Shop turns Auto off; old saves that had Sunset or Night selected keep it.
+- Android: added `ACCESS_COARSE_LOCATION` (only used for this).
+
 ## Changelog — v4.3.1
 
 - El Gouna Film Festival is now about **Egyptian films from 2015 on**: live Wikidata questions only use films released from 2015 (and the actors in them), and the built-in bank was replaced with post-2015 films — stars, directors, release years, plots and new film jokes (title riddles). Set `MIN_YEAR` in `games/el-gouna.js` to change the cut-off.
